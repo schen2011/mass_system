@@ -1,0 +1,78 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head> 
+    <title>Client Page</title> 
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  	<link rel="stylesheet" type="text/css"
+          href="webjars/bootstrap/3.3.7/css/bootstrap.min.css"/>
+  	<script type="text/javascript"
+	        src="webjars/jquery/2.2.4/jquery.min.js"></script>
+</head>
+<body>
+  <div>
+    <br>
+    <br>
+    <br>
+  </div>
+
+  <div class="container-fluid text-center">
+    <h1>Rider Route Planner
+      <br>
+      <br>
+    </h1>
+
+    <div class="form-inline">
+
+      <div class="input-group col-md-1">
+        <label for="st">Leave from:</label>
+      </div>
+
+      <div class="input-group col-md-2">
+        <input type="text" class="form-control" id="st">
+      </div>
+
+      <div class="input-group col-md-1">
+        <label for="dst">Go to:</label>
+      </div>
+
+      <div class="input-group col-md-2">
+        <input type="text" class="form-control" id="dst">
+      </div>
+      <div class="input-group col-md-2">
+        <button type="button" class="btn btn-info">Search Routes</button>
+      </div>
+    </div>
+
+    <div>
+      <br>
+      <br>
+    </div>
+
+
+    <div class="card text-white bg-info">
+      <div class="card-header">
+        <h5 class="card-title">Top Picks</h5>
+      </div>
+      <div class="card-body">
+        route 1:
+        <br> route 2:
+        <br> route 3:
+        <br>
+
+      </div>
+    </div>
+    <div>
+      <br>
+      <br>
+    </div>
+    
+    <div class="card text-white bg-success">
+      <div class="card-header">
+        <h5 class="card-title">Real-Time System</h5>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

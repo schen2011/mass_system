@@ -15,14 +15,25 @@ public class MetroSystemController implements MetroSystemActions {
     }
     
     @GetMapping("/admin") 
-    public void start() {
-    	//trigger metro system 
+    public String admin() {
+    	return "admin";
+    }
+    
+    @GetMapping("/client") 
+    public String client() {
+    	return "client";
     }
 
 	@Override
 	public String getRoute(int startStopID, int destinationStopID) {
 		// TODO Auto-generated method stub
 		return "";
+	}
+
+	@Override
+	public void start() {
+		// TODO Auto-generated method stub
+		
 	}
     
     

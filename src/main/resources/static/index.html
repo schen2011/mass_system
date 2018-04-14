@@ -4,9 +4,10 @@
   <title>Index</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="./css/bootstrap.min.css"/>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="./js/bootstrap.min.js"></script>
+  <link rel="stylesheet" type="text/css"
+          href="webjars/bootstrap/3.3.7/css/bootstrap.min.css"/>
+  <script type="text/javascript"
+	        src="webjars/jquery/2.2.4/jquery.min.js"></script>
 </head>
 <body>
    
@@ -14,17 +15,14 @@
 <div class="container-fluid text-center">
   <h1><br>Marta System<br><br><br></h1>
 
-  
-  <div class="container text-center">
-      <a href="/rider" class="btn btn-info btn-primary btn-lg" role="button">Rider</a>
-      <br><br>
-    </div>
-
-  <div class="container text-center">
-      <a href="/admin" class="btn btn-success btn btn-primary btn-lg" role="button">Administrator</a>
+  <div class="container w3-show-inline-block">
+      <a href="/client" class="btn btn-info btn-primary btn-lg" role="button" style="width: 30%">
+      	Rider
+      </a>
+      <a href="/admin" class="btn btn-success btn btn-primary btn-lg" role="button" style="width: 30%">
+      	Administrator
+      </a>
   </div>
-
-  </div>
-
+</div>
 </body>
 </html>

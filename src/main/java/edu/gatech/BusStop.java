@@ -65,7 +65,7 @@ public class BusStop {
     public String getName() { return this.stopName; }
 
     // if route ID is not provided, return the sum of waiting riders of all routes
-    public Integer getWaiting()
+	public Integer getWaiting()
     {
         int totalWaitingRiders = 0;
         Iterator it = waiting.entrySet().iterator();
