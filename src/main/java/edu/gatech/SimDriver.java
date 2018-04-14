@@ -10,11 +10,13 @@ import java.util.Properties;
 public class SimDriver {
     private static SimQueue simEngine;
     private static BusSystem martaModel;
+    private static TrainSystem trainModel;
     private static Random randGenerator;
 
     public SimDriver() {
         simEngine = new SimQueue();
         martaModel = new BusSystem();
+        trainModel = new TrainSystem();
         randGenerator = new Random();
     }
 
@@ -34,21 +36,37 @@ public class SimDriver {
                     System.out.print(" new event - rank: " + Integer.parseInt(tokens[1]));
                     System.out.println(" type: " + tokens[2] + " ID: " + Integer.parseInt(tokens[3]) + " created");
                     break;
-                case "add_stop":
+                case "add_bus_stop":
                     int stopID = martaModel.makeStop(Integer.parseInt(tokens[1]), tokens[2], Double.parseDouble(tokens[3]), Double.parseDouble(tokens[4]));
-                    System.out.println(" new stop: " + Integer.toString(stopID) + " created");
+                    System.out.println(" new bus stop: " + Integer.toString(stopID) + " created");
                     break;
-                case "add_route":
+                case "add_train_stop":
+                    stopID = trainModel.makeStop(Integer.parseInt(tokens[1]), tokens[2], Integer.parseInt(tokens[3]), Double.parseDouble(tokens[4]), Double.parseDouble(tokens[5]));
+                    System.out.println(" new train stop: " + Integer.toString(stopID) + " created");
+                    break;
+                case "add_bus_route":
                     int routeID = martaModel.makeRoute(Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]), tokens[3]);
-                    System.out.println(" new route: " + Integer.toString(routeID) + " created");
+                    System.out.println(" new bus route: " + Integer.toString(routeID) + " created");
+                    break;
+                case "add_train_route":
+                    routeID = trainModel.makeRoute(Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]), tokens[3]);
+                    System.out.println(" new train route: " + Integer.toString(routeID) + " created");
                     break;
                 case "add_bus":
                     int busID = martaModel.makeBus(Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]), Integer.parseInt(tokens[3]), Integer.parseInt(tokens[4]), Integer.parseInt(tokens[5]), Integer.parseInt(tokens[6]));
                     System.out.println(" new bus: " + Integer.toString(busID) + " created");
                     break;
-                case "extend_route":
+                case "add_train":
+                    int trainID = trainModel.makeTrain(Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]), Integer.parseInt(tokens[3]), Integer.parseInt(tokens[4]), Integer.parseInt(tokens[5]), Integer.parseInt(tokens[6]));
+                    System.out.println(" new train: " + Integer.toString(trainID) + " created");
+                    break;
+                case "extend_bus_route":
                     martaModel.appendStopToRoute(Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]), Integer.parseInt(tokens[3]));
-                    System.out.println(" stop: " + Integer.parseInt(tokens[2]) + " appended to route " + Integer.parseInt(tokens[1]) + " waiting: " + Integer.parseInt(tokens[3]));
+                    System.out.println(" bus stop: " + Integer.parseInt(tokens[2]) + " appended to bus route " + Integer.parseInt(tokens[1]) + " waiting: " + Integer.parseInt(tokens[3]));
+                    break;
+                case "extend_train_route":
+                    trainModel.appendStopToRoute(Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]));
+                    System.out.println(" train stop: " + Integer.parseInt(tokens[2]) + " appended to train route " + Integer.parseInt(tokens[1]));
                     break;
                 case "upload_real_data":
                     uploadMARTAData();
@@ -80,11 +98,18 @@ public class SimDriver {
                     }
                     break;
                 case "system_report":
-                    System.out.println(" system report - stops, buses and routes:");
+                    System.out.println(" bus system report - stops, buses and routes:");
                     for (BusStop singleStop: martaModel.getStops().values()) { singleStop.displayInternalStatus(); }
                     for (Bus singleBus: martaModel.getBuses().values()) { singleBus.displayInternalStatus(); }
                     for (BusRoute singleRoute: martaModel.getRoutes().values()) { singleRoute.displayInternalStatus(); }
+
+                    System.out.println(" train system report - stops, buses and routes:");
+                    for (TrainStop singleStop: trainModel.getStops().values()) { singleStop.displayInternalStatus(); }
+                    for (Train singleTrain: trainModel.getTrains().values()) { singleTrain.displayInternalStatus(); }
+                    for (TrainRoute singleRoute: trainModel.getRoutes().values()) { singleRoute.displayInternalStatus(); }
+
                     break;
+
                 case "display_model":
                 	martaModel.displayModel();
                 	break;
