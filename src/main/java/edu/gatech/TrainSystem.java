@@ -7,7 +7,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 
-public class TrainSystem {
+public class TrainSystem implements MetroSystem {
     private HashMap<Integer, TrainStop> stops;
     private HashMap<Integer, TrainRoute> routes;
     private HashMap<Integer, Train> trains;
@@ -28,25 +28,22 @@ public class TrainSystem {
         return null;
     }
 
-    public Train gettrain(int trainID) {
+    public Train getTrain(int trainID) {
         if (trains.containsKey(trainID)) { return trains.get(trainID); }
         return null;
     }
 
     public int makeStop(int uniqueID, String inputName, int inputRiders, double inputXCoord, double inputYCoord) {
-        // int uniqueID = stops.size();
         stops.put(uniqueID, new TrainStop(uniqueID, inputName, inputRiders, inputXCoord, inputYCoord));
         return uniqueID;
     }
 
     public int makeRoute(int uniqueID, int inputNumber, String inputName) {
-        // int uniqueID = routes.size();
         routes.put(uniqueID, new TrainRoute(uniqueID, inputNumber, inputName));
         return uniqueID;
     }
 
     public int makeTrain(int uniqueID, int inputRoute, int inputLocation, int inputPassengers, int inputCapacity, int inputSpeed) {
-        // int uniqueID = trains.size();
         trains.put(uniqueID, new Train(uniqueID, inputRoute, inputLocation, inputPassengers, inputCapacity, inputSpeed));
         return uniqueID;
     }

@@ -1,6 +1,6 @@
 package edu.gatech;
 
-public class Train {
+public class Train implements Vehicle {
     private Integer ID;
     private Integer route;
     private Integer nextLocation;
