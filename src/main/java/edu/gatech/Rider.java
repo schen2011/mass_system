@@ -5,10 +5,10 @@ package edu.gatech;
  */
 public class Rider {
 
-    //route ID (UI side: dropdown)
+    //route ID (UI side: populate dropdown)
     private Integer targetBusRoute;
 
-    // stop ID (UI side: dropdown)
+    //stop ID (UI side: populate dropdown)
     private Integer destination;
 
     public Rider() { }
