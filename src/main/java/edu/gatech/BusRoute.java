@@ -2,7 +2,7 @@ package edu.gatech;
 
 import java.util.HashMap;
 
-public class BusRoute {
+public class BusRoute implements Route {
     private Integer ID;
     private Integer routeNumber;
     private String routeName;

@@ -7,7 +7,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 
-public class BusSystem {
+public class BusSystem implements MetroSystem {
     private HashMap<Integer, BusStop> stops;
     private HashMap<Integer, BusRoute> routes;
     private HashMap<Integer, Bus> buses;
