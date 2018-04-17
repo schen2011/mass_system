@@ -1,6 +1,9 @@
 package edu.gatech;
 
 import java.util.HashMap;
+
+import application.model.Road;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.io.BufferedWriter;
@@ -11,11 +14,13 @@ public class BusSystem {
     private HashMap<Integer, BusStop> stops;
     private HashMap<Integer, BusRoute> routes;
     private HashMap<Integer, Bus> buses;
+    private HashMap<Integer, Road> roads;
 
     public BusSystem() {
         stops = new HashMap<Integer, BusStop>();
         routes = new HashMap<Integer, BusRoute>();
         buses = new HashMap<Integer, Bus>();
+        roads = new HashMap<Integer, Road>();
     }
 
     public BusStop getStop(int stopID) {
@@ -43,6 +48,11 @@ public class BusSystem {
         // int uniqueID = routes.size();
         routes.put(uniqueID, new BusRoute(uniqueID, inputNumber, inputName));
         return uniqueID;
+    }
+    
+    public int makeRoad(Road road) {
+        roads.put(road.getRoadId(), road);
+        return road.getRoadId();
     }
 
     public int makeBus(int uniqueID, int inputRoute, int inputLocation, int inputPassengers, int inputCapacity, int inputSpeed) {
