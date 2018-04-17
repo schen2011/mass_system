@@ -1,5 +1,6 @@
 package edu.gatech;
 
+import java.util.Iterator;
 import java.util.Random;
 import java.util.HashMap;
 
@@ -11,7 +12,9 @@ public class BusStop {
     private Random randGenerator;
     private HashMap<Integer, int[]> rateCatchingBus;
     private HashMap<Integer, int[]> rateLeavingBus;
-    private Integer waiting;
+
+    //in the bus stop, for each route, there is an array of waiting riders
+    private HashMap<Integer, Rider[]> waiting;
 
     public BusStop() {
         this.ID = -1;
@@ -25,10 +28,11 @@ public class BusStop {
         randGenerator = new Random();
         rateCatchingBus = new HashMap<Integer, int[]>();
         rateLeavingBus = new HashMap<Integer, int[]>();
-        this.waiting = 0;
+        waiting = new HashMap<Integer, Rider[]>();
     }
 
-    public BusStop(int uniqueValue, String inputName, int inputRiders, double inputXCoord, double inputYCoord) {
+    // no need to provide # of waiting riders when adding new stop
+    public BusStop(int uniqueValue, String inputName, double inputXCoord, double inputYCoord) {
         this.ID = uniqueValue;
         this.stopName = inputName;
         this.xCoord = inputXCoord;
@@ -36,12 +40,21 @@ public class BusStop {
         randGenerator = new Random();
         rateCatchingBus = new HashMap<Integer, int[]>();
         rateLeavingBus = new HashMap<Integer, int[]>();
-        this.waiting = inputRiders;
+        waiting = new HashMap<Integer, Rider[]>();
    }
 
     public void setName(String inputName) { this.stopName = inputName; }
 
-    public void setRiders(int inputRiders) { this.waiting = inputRiders; }
+    // need to provider route ID to set waiting riders for the specific route
+    public void setRiders(int routeID, int inputRiders) {
+
+        Rider[] riders = new Rider[inputRiders];
+        for( int i=0; i<inputRiders-1; i++ )
+            riders[i] = new Rider(routeID);
+
+        this.waiting.put(routeID, riders);
+
+    }
 
     public void setXCoord(double inputXCoord) { this.xCoord = inputXCoord; }
 
@@ -51,7 +64,45 @@ public class BusStop {
 
     public String getName() { return this.stopName; }
 
-    public Integer getWaiting() { return this.waiting; }
+    // if route ID is not provided, return the sum of waiting riders of all routes
+	public Integer getWaiting()
+    {
+        int totalWaitingRiders = 0;
+        Iterator it = waiting.entrySet().iterator();
+        while (it.hasNext()) {
+            HashMap.Entry pair = (HashMap.Entry)it.next();
+            totalWaitingRiders = totalWaitingRiders + ((Integer)pair.getValue()).intValue();
+            it.remove(); // avoids a ConcurrentModificationException
+        }
+
+        return totalWaitingRiders;
+    }
+
+    // if route ID is provided, return # of waiting riders for the specific route
+    public Integer getWaiting(int routeID)
+    {
+        //check if there is a waiting array for route ID
+        boolean isWaiting = false;
+
+        Iterator it = waiting.entrySet().iterator();
+        while (it.hasNext()) {
+            HashMap.Entry pair = (HashMap.Entry)it.next();
+            if(routeID == ((Integer)pair.getKey()).intValue())
+            {
+                isWaiting = true;
+                break;
+            }
+            it.remove(); // avoids a ConcurrentModificationException
+        }
+
+        if(isWaiting){
+
+            return this.waiting.get(routeID).length;
+        }
+        else{return 0;}
+
+    }
+
 
     public Double getXCoord() { return this.xCoord; }
 
@@ -65,13 +116,46 @@ public class BusStop {
         System.out.println("get new people - exchange with bus when it passes by");
     }
 
+    //to-do
     public Double findDistance(BusStop destination) {
         // coordinates are measure in abstract units and conversion factor translates to statute miles
         final double distanceConversion = 70.0;
         return distanceConversion * Math.sqrt(Math.pow((this.xCoord - destination.getXCoord()), 2) + Math.pow((this.yCoord - destination.getYCoord()), 2));
     }
 
-    public Integer exchangeRiders(int rank, int initialPassengerCount, int capacity) {
+    //append a stop to a route, and also specify the # of riders waiting for the route
+    public void addNewRoute(int routeID, int inputRiders)
+
+    {
+        Rider[] riders = new Rider[inputRiders];
+        for( int i=0; i<inputRiders-1; i++ )
+            riders[i] = new Rider(routeID);
+
+        this.waiting.put(routeID, riders);
+    }
+
+    // need to provider route ID to add more riders for the specific route
+    public void addNewRiders(int routeID, int moreRiders) {
+
+        int currentRidersSize = this.waiting.get(routeID).length;
+        int updatedRidersSize = currentRidersSize + moreRiders;
+
+        Rider[] currentRiders = this.waiting.get(routeID);
+        Rider[] updatedRiders = new Rider[updatedRidersSize];
+
+        for( int i=0; i<currentRidersSize-1; i++ )
+            updatedRiders[i] = currentRiders[i];
+
+        for( int i=(currentRidersSize); i<updatedRidersSize-1; i++ )
+            updatedRiders[i] = new Rider(routeID);
+
+        this.waiting.remove(routeID);
+        this.waiting.put(routeID, updatedRiders);
+
+    }
+
+    // need to know the route ID to exchange the riders from the bus stop
+    public Integer exchangeRiders(int rank, int initialPassengerCount, int capacity, int routeID) {
         int hourOfTheDay = (rank / 60) % 24;
         int ableToBoard;
         int[] leavingBusRates, catchingBusRates;
@@ -85,22 +169,35 @@ public class BusStop {
         // update the number of riders actually leaving the bus versus the current number of passengers
         int updatedPassengerCount = Math.max(0, initialPassengerCount - leavingBus);
 
-        // calculate expected number riders leaving the bus
+        // calculate expected number riders catching the bus
         if (rateCatchingBus.containsKey(hourOfTheDay)) { catchingBusRates = rateCatchingBus.get(hourOfTheDay); }
         else { catchingBusRates = filler; }
         int catchingBus = randomBiasedValue(catchingBusRates[0], catchingBusRates[1], catchingBusRates[2]);
 
         // determine how many of the currently waiting and new passengers will fit on the bus
-        int tryingToBoard = waiting + catchingBus;
+        int tryingToBoard = this.getWaiting(routeID) + catchingBus;
         int availableSeats = capacity - updatedPassengerCount;
 
         // update the number of passengers left waiting for the next bus
         if (tryingToBoard > availableSeats) {
+
             ableToBoard = availableSeats;
-            waiting = tryingToBoard - availableSeats;
+
+            int waitingToBoard = tryingToBoard - availableSeats;
+
+            Rider[] currentRiders = this.waiting.get(routeID);
+            Rider[] updatedRiders = new Rider[waitingToBoard];
+
+            for( int i=ableToBoard; i<waitingToBoard-1; i++ )
+                updatedRiders[i] = currentRiders[i];
+
+            this.waiting.remove(routeID);
+            this.waiting.put(routeID, updatedRiders);
+
         } else {
             ableToBoard = tryingToBoard;
-            waiting = 0;
+            //no waiting array for next bus
+            this.waiting.remove(routeID);
         }
 
         // update the number of riders actually catching the bus and return the difference from the original riders
@@ -108,11 +205,22 @@ public class BusStop {
         return finalPassengerCount - initialPassengerCount;
     }
 
-    public void addNewRiders(int moreRiders) { waiting = waiting + moreRiders; }
 
     public void displayInternalStatus() {
+
         System.out.print("> stop - ID: " + Integer.toString(ID));
-        System.out.print(" name: " + stopName + " waiting: " + Integer.toString(waiting));
+
+        System.out.print(" name: " + stopName);
+
+        //loop HashMap waiting
+        Iterator it = waiting.entrySet().iterator();
+        while (it.hasNext()) {
+            HashMap.Entry pair = (HashMap.Entry)it.next();
+            int routeID = ((Integer)pair.getKey()).intValue();
+            System.out.print(" route: " + routeID + " waiting: " + this.getWaiting(routeID));
+            it.remove(); // avoids a ConcurrentModificationException
+        }
+
         System.out.println(" xCoord: " + Double.toString(xCoord) + " yCoord: " + Double.toString(yCoord));
     }
 

@@ -34,7 +34,7 @@ insert into STOPROAD(stopid_s, stopid_e, roadid) values(1, 2, 2);
 insert into STOPROAD(stopid_s, stopid_e, roadid) values(1, 2, 3);
 insert into STOPROAD(stopid_s, stopid_e, roadid) values(2, 3, 4);
 insert into STOPROAD(stopid_s, stopid_e, roadid) values(2, 3, 5);
-insert into STOPRAOD(stopid_s, stopid_e, roadid) values(3, 4, 6);
+insert into STOPROAD(stopid_s, stopid_e, roadid) values(3, 4, 6);
 insert into STOPROAD(stopid_s, stopid_e, roadid) values(4, 5, 7);
 
 insert into ROUTESTOP(routeid, stopid) values(1, 1);

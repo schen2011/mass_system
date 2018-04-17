@@ -1,6 +1,6 @@
 package edu.gatech;
 
-public class Train {
+public class Train implements Vehicle {
     private Integer ID;
     private Integer route;
     private Integer nextLocation;
@@ -31,13 +31,13 @@ public class Train {
         this.passengers = inputPassengers;
         this.capacity = inputCapacity;
         this.speed = inputSpeed;
-   }
+    }
 
     public void setRoute(int inputRoute) { this.route = inputRoute; }
 
     public void setLocation(int inputLocation) {
-    	this.prevLocation = this.nextLocation;
-    	this.nextLocation = inputLocation;
+        this.prevLocation = this.nextLocation;
+        this.nextLocation = inputLocation;
     }
 
     public void setPassengers(int inputPassengers) { this.passengers = inputPassengers; }

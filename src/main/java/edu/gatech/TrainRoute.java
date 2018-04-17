@@ -2,7 +2,7 @@ package edu.gatech;
 
 import java.util.HashMap;
 
-public class TrainRoute {
+public class TrainRoute implements Route {
     private Integer ID;
     private Integer routeNumber;
     private String routeName;
@@ -24,7 +24,7 @@ public class TrainRoute {
         this.routeNumber = inputNumber;
         this.routeName = inputName;
         this.stopsOnRoute = new HashMap<Integer, Integer>();
-   }
+    }
 
     public void setNumber(int inputNumber) { this.routeNumber = inputNumber; }
 
@@ -37,6 +37,7 @@ public class TrainRoute {
     public Integer getNumber() { return this.routeNumber; }
 
     public String getName() { return this.routeName; }
+
     public boolean hasStop(int stopID) { return stopsOnRoute.containsValue(stopID); }
 
     public void displayEvent() {

@@ -7,7 +7,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 
-public class BusSystem {
+public class BusSystem implements MetroSystem {
     private HashMap<Integer, BusStop> stops;
     private HashMap<Integer, BusRoute> routes;
     private HashMap<Integer, Bus> buses;
@@ -33,9 +33,10 @@ public class BusSystem {
         return null;
     }
 
-    public int makeStop(int uniqueID, String inputName, int inputRiders, double inputXCoord, double inputYCoord) {
+    //no need to provide the # of waiting riders when adding stops
+    public int makeStop(int uniqueID, String inputName, double inputXCoord, double inputYCoord) {
         // int uniqueID = stops.size();
-        stops.put(uniqueID, new BusStop(uniqueID, inputName, inputRiders, inputXCoord, inputYCoord));
+        stops.put(uniqueID, new BusStop(uniqueID, inputName, inputXCoord, inputYCoord));
         return uniqueID;
     }
 
@@ -51,7 +52,12 @@ public class BusSystem {
         return uniqueID;
     }
 
-    public void appendStopToRoute(int routeID, int nextStopID) { routes.get(routeID).addNewStop(nextStopID); }
+    //need to provide # of waiting riders for specific route when append stop to route
+    public void appendStopToRoute(int routeID, int nextStopID, int inputRiders)
+    {
+        routes.get(routeID).addNewStop(nextStopID);
+        stops.get(nextStopID).addNewRoute(routeID, inputRiders);
+    }
 
     public HashMap<Integer, BusStop> getStops() { return stops; }
 
@@ -69,7 +75,7 @@ public class BusSystem {
     	
     	try{
             // create new file access path
-            String path="./bus.dot";
+            String path="./mts_digraph.dot";
             File file = new File(path);
 
             // create the file if it doesn't exist

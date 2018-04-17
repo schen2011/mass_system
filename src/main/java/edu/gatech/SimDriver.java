@@ -3,10 +3,10 @@ package edu.gatech;
 import java.util.Scanner;
 import java.util.HashMap;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 import java.sql.*;
 import java.util.Properties;
+import java.util.List;
 
 public class SimDriver {
     private static SimQueue simEngine;
@@ -38,20 +38,20 @@ public class SimDriver {
                     System.out.println(" type: " + tokens[2] + " ID: " + Integer.parseInt(tokens[3]) + " created");
                     break;
                 case "add_bus_stop":
-                    int stopID = martaModel.makeStop(Integer.parseInt(tokens[1]), tokens[2], Integer.parseInt(tokens[3]), Double.parseDouble(tokens[4]), Double.parseDouble(tokens[5]));
-                    System.out.println(" new stop: " + Integer.toString(stopID) + " created");
+                    int stopID = martaModel.makeStop(Integer.parseInt(tokens[1]), tokens[2], Double.parseDouble(tokens[3]), Double.parseDouble(tokens[4]));
+                    System.out.println(" new bus stop: " + Integer.toString(stopID) + " created");
                     break;
                 case "add_train_stop":
                     stopID = trainModel.makeStop(Integer.parseInt(tokens[1]), tokens[2], Integer.parseInt(tokens[3]), Double.parseDouble(tokens[4]), Double.parseDouble(tokens[5]));
-                    System.out.println(" new stop: " + Integer.toString(stopID) + " created");
+                    System.out.println(" new train stop: " + Integer.toString(stopID) + " created");
                     break;
                 case "add_bus_route":
                     int routeID = martaModel.makeRoute(Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]), tokens[3]);
-                    System.out.println(" new route: " + Integer.toString(routeID) + " created");
+                    System.out.println(" new bus route: " + Integer.toString(routeID) + " created");
                     break;
                 case "add_train_route":
                     routeID = trainModel.makeRoute(Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]), tokens[3]);
-                    System.out.println(" new route: " + Integer.toString(routeID) + " created");
+                    System.out.println(" new train route: " + Integer.toString(routeID) + " created");
                     break;
                 case "add_bus":
                     int busID = martaModel.makeBus(Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]), Integer.parseInt(tokens[3]), Integer.parseInt(tokens[4]), Integer.parseInt(tokens[5]), Integer.parseInt(tokens[6]));
@@ -62,12 +62,12 @@ public class SimDriver {
                     System.out.println(" new train: " + Integer.toString(trainID) + " created");
                     break;
                 case "extend_bus_route":
-                    martaModel.appendStopToRoute(Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]));
-                    System.out.println(" stop: " + Integer.parseInt(tokens[2]) + " appended to route " + Integer.parseInt(tokens[1]));
+                    martaModel.appendStopToRoute(Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]), Integer.parseInt(tokens[3]));
+                    System.out.println(" bus stop: " + Integer.parseInt(tokens[2]) + " appended to bus route " + Integer.parseInt(tokens[1]) + " waiting: " + Integer.parseInt(tokens[3]));
                     break;
                 case "extend_train_route":
                     trainModel.appendStopToRoute(Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]));
-                    System.out.println(" stop: " + Integer.parseInt(tokens[2]) + " appended to route " + Integer.parseInt(tokens[1]));
+                    System.out.println(" train stop: " + Integer.parseInt(tokens[2]) + " appended to train route " + Integer.parseInt(tokens[1]));
                     break;
                 case "upload_real_data":
                     uploadMARTAData();
@@ -103,50 +103,46 @@ public class SimDriver {
                     for (BusStop singleStop: martaModel.getStops().values()) { singleStop.displayInternalStatus(); }
                     for (Bus singleBus: martaModel.getBuses().values()) { singleBus.displayInternalStatus(); }
                     for (BusRoute singleRoute: martaModel.getRoutes().values()) { singleRoute.displayInternalStatus(); }
+
                     System.out.println(" train system report - stops, buses and routes:");
                     for (TrainStop singleStop: trainModel.getStops().values()) { singleStop.displayInternalStatus(); }
                     for (Train singleTrain: trainModel.getTrains().values()) { singleTrain.displayInternalStatus(); }
                     for (TrainRoute singleRoute: trainModel.getRoutes().values()) { singleRoute.displayInternalStatus(); }
+
                     break;
+
                 case "display_model":
-                    martaModel.displayModel();
+                	martaModel.displayModel();
                     trainModel.displayModel();
-                    break;
+                	break;
+
                 case "search_routes":
-	                int stID = Integer.parseInt(tokens[1]);
-	                int dstID = Integer.parseInt(tokens[2]);
-	                List<Integer> busRouteChoice= new ArrayList<Integer>(); 
-	                List<Integer> trainRouteChoice= new ArrayList<Integer>(); 
-	            	System.out.println("Take below routes from stop "+tokens[1]+" to stop "+tokens[2] );
-	                    for ( BusRoute route: martaModel.getRoutes().values()){
-	                        if (route.hasStop(stID) && route.hasStop(dstID)){
-	                            busRouteChoice.add(route.getID());
-	                        }
-	                    } 
-	                    for (int i: busRouteChoice) {
-	                    	System.out.println("Take Bus Route " + i );
-	                    }
-	                    for ( TrainRoute route: trainModel.getRoutes().values()){
-	                        if (route.hasStop(stID) && route.hasStop(dstID)){
-	                            trainRouteChoice.add(route.getID());
-	                        }
-	                    } 
-	                    for (int i: trainRouteChoice) {
-	                    	System.out.println("Take Train Route " + i );
-	                    }
-	                    break;
-                    /* pseudo code
-                    for bus system
-                        check on each route
-                            check if there it contains start id && dest id 
-                            if yes, add route number into the list, and check distance between them
-                    for train system
-                            same as above
-                        return routes;
-                        
-                         print route list
-                       */
-              
+                    int stID = Integer.parseInt(tokens[1]);
+                    int dstID = Integer.parseInt(tokens[2]);
+                    List<Integer> busRouteChoice= new ArrayList<Integer>();
+                    List<Integer> trainRouteChoice= new ArrayList<Integer>();
+                    System.out.println("Take below routes from stop "+tokens[1]+" to stop "+tokens[2] );
+                    for ( BusRoute route: martaModel.getRoutes().values()){
+                        if (route.hasStop(stID) && route.hasStop(dstID)){
+                        busRouteChoice.add(route.getID());
+                        }
+                    }
+
+                    for (int i: busRouteChoice) {
+                        System.out.println("Take Bus Route " + i );
+                    }
+
+                    for ( TrainRoute route: trainModel.getRoutes().values()){
+                        if (route.hasStop(stID) && route.hasStop(dstID)){
+                            trainRouteChoice.add(route.getID());
+                        }
+                    }
+
+                    for (int i: trainRouteChoice) {
+                        System.out.println("Take Train Route " + i );
+                    }
+                    break;
+
                 case "quit":
                     System.out.println(" stop the command loop");
                     break;
@@ -196,7 +192,7 @@ public class SimDriver {
                 latitude = rs.getDouble("latitude");
                 longitude = rs.getDouble("longitude");
 
-                martaModel.makeStop(stopID,stopName,0,latitude,longitude);
+                martaModel.makeStop(stopID,stopName,latitude,longitude);
                 recordCounter++;
             }
             System.out.println(Integer.toString(recordCounter) + " added");
@@ -228,7 +224,7 @@ public class SimDriver {
 
                 targetList = routeLists.get(routeID);
                 if (!targetList.contains(stopID)) {
-                    martaModel.appendStopToRoute(routeID, stopID);
+                    martaModel.appendStopToRoute(routeID, stopID,0);
                     recordCounter++;
                     targetList.add(stopID);
                     // if (direction.equals("Clockwise")) { circularRouteList.add(routeID); }
@@ -240,7 +236,7 @@ public class SimDriver {
                 if (!circularRouteList.contains(reverseRouteID)) {
                     targetList = routeLists.get(reverseRouteID);
                     for (int i = targetList.size() - 1; i > 0; i--) {
-                        martaModel.appendStopToRoute(reverseRouteID, targetList.get(i));
+                        martaModel.appendStopToRoute(reverseRouteID, targetList.get(i),0);
                     }
                 }
             }
