@@ -125,7 +125,7 @@ public class SimDriver {
                     System.out.println("Take below routes from stop "+tokens[1]+" to stop "+tokens[2] );
                     for ( BusRoute route: martaModel.getRoutes().values()){
                         if (route.hasStop(stID) && route.hasStop(dstID)){
-                        busRouteChoice.add(route.getID());
+                            busRouteChoice.add(route.getID());
                         }
                     }
 

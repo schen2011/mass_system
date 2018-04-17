@@ -1,5 +1,7 @@
 package application.model;
 
+import java.util.HashMap;
+
 /**
  * This class contains the details of Routes
  * @author mythili
@@ -11,6 +13,9 @@ public class RouteInfo {
 	private String routeName;
 	private String number;
 	private int typeId;
+
+	private HashMap<Integer, Integer> stopsOnRoute;
+
 	/**
 	 * @return the routeId
 	 */
@@ -62,6 +67,34 @@ public class RouteInfo {
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
+
+	public void addNewStop(int stopID) { this.stopsOnRoute.put(stopsOnRoute.size(), stopID); }
+
+	public boolean hasStop(int stopID) { return stopsOnRoute.containsValue(stopID); }
+
+	public Integer getCurrentLocation(int routeId) {
+
+		int currentLocation = -1;
+
+		for (int i = 0; i < stopsOnRoute.size(); i++) {
+
+			if(stopsOnRoute.get(i)==routeId)
+				currentLocation = i;
+				i=stopsOnRoute.size();
+		}
+		return currentLocation;
+	}
+
+	public Integer getNextLocation(int routeLocation) {
+		int routeSize = this.stopsOnRoute.size();
+		if (routeSize > 0) { return (routeLocation + 1) % routeSize; }
+		return -1;
+	}
+
+	public Integer getStopID(int routeLocation)
+	{ return this.stopsOnRoute.get(routeLocation); }
+
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
