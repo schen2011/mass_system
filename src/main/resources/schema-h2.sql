@@ -1,3 +1,9 @@
+create table admin_users
+(
+   name varchar(255) not null,
+   password varchar(255) not null,
+   primary key(name)
+);
 CREATE TABLE IF NOT EXISTS Type (
 	ID INT PRIMARY KEY, 
 	NAME VARCHAR(255)
