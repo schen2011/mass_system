@@ -18,7 +18,8 @@ import application.model.StopInfo;
 import application.model.StopRoadInfo;
 
 /**
- * This class is the repository layer to retrieve information from the H2 Database
+ * This class is the repository layer to retrieve information from the H2
+ * Database
  * 
  * @author mythi
  *
@@ -45,7 +46,7 @@ public class MetroDataRepository {
 				return null;
 			}
 			stmt = conn.createStatement();
-			String sql = "SELECT id, name, x, y FROM Stop";
+			String sql = "SELECT id, name, x, y, typeId FROM Stop";
 			ResultSet rs = stmt.executeQuery(sql);
 
 			// STEP 4: Extract data from result set
@@ -57,6 +58,7 @@ public class MetroDataRepository {
 				stopInfo.setName(rs.getString("name"));
 				stopInfo.setxAxis(rs.getInt("x"));
 				stopInfo.setyAxis(rs.getInt("y"));
+				stopInfo.setTypeId(rs.getInt("typeId"));
 				stopInfos.add(stopInfo);
 			}
 			// STEP 5: Clean-up environment
@@ -87,7 +89,7 @@ public class MetroDataRepository {
 				return null;
 			}
 			stmt = conn.createStatement();
-			String sql = "SELECT id, name,no, x, y FROM Route";
+			String sql = "SELECT id, name,no,typeId FROM Route";
 			ResultSet rs = stmt.executeQuery(sql);
 
 			// STEP 4: Extract data from result set
@@ -97,9 +99,8 @@ public class MetroDataRepository {
 				// Retrieve by column name
 				routeInfo.setRouteId(rs.getInt("id"));
 				routeInfo.setRouteName(rs.getString("name"));
-				routeInfo.setNumber(rs.getInt("no"));
-				routeInfo.setxAxis(rs.getInt("x"));
-				routeInfo.setyAxis(rs.getInt("y"));
+				routeInfo.setNumber(rs.getString("no"));
+				routeInfo.setTypeId(rs.getInt("typeId"));
 				routeInfos.add(routeInfo);
 			}
 			// STEP 5: Clean-up environment
@@ -207,7 +208,7 @@ public class MetroDataRepository {
 				return null;
 			}
 			stmt = conn.createStatement();
-			String sql = "SELECT id, stopId, roadId FROM StopRoad";
+			String sql = "SELECT id, STOPID_S,STOPID_E, roadId FROM StopRoad";
 			ResultSet rs = stmt.executeQuery(sql);
 
 			// STEP 4: Extract data from result set
@@ -217,7 +218,8 @@ public class MetroDataRepository {
 				// Retrieve by column name
 				stopRoadInfo.setId(rs.getInt("id"));
 				stopRoadInfo.setRoadId(rs.getInt("roadId"));
-				stopRoadInfo.setStopId(rs.getInt("stopId"));
+				stopRoadInfo.setStopIdStart(rs.getInt("STOPID_S"));
+				stopRoadInfo.setStopIdEnd(rs.getInt("STOPID_E"));
 				stopRoadInfos.add(stopRoadInfo);
 			}
 			// STEP 5: Clean-up environment

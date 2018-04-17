@@ -11,6 +11,7 @@ public class StopInfo {
 	private String name;
 	private int xAxis;
 	private int yAxis;
+	private int typeId;
 
 	/**
 	 * @return the stopId
@@ -71,6 +72,21 @@ public class StopInfo {
 	public void setyAxis(int yAxis) {
 		this.yAxis = yAxis;
 	}
+	
+
+	/**
+	 * @return the typeId
+	 */
+	public int getTypeId() {
+		return typeId;
+	}
+
+	/**
+	 * @param typeId the typeId to set
+	 */
+	public void setTypeId(int typeId) {
+		this.typeId = typeId;
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -88,7 +104,10 @@ public class StopInfo {
 		builder.append(xAxis);
 		builder.append(", yAxis=");
 		builder.append(yAxis);
+		builder.append(", typeId=");
+		builder.append(typeId);
 		builder.append("]");
 		return builder.toString();
 	}
+
 }

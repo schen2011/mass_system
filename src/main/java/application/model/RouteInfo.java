@@ -9,9 +9,8 @@ public class RouteInfo {
 
 	private int routeId;
 	private String routeName;
-	private int number;
-	private int xAxis;
-	private int yAxis;
+	private String number;
+	private int typeId;
 	/**
 	 * @return the routeId
 	 */
@@ -39,38 +38,26 @@ public class RouteInfo {
 	/**
 	 * @return the number
 	 */
-	public int getNumber() {
+	public String getNumber() {
 		return number;
 	}
 	/**
 	 * @param number the number to set
 	 */
-	public void setNumber(int number) {
+	public void setNumber(String number) {
 		this.number = number;
+	}	
+	/**
+	 * @return the typeId
+	 */
+	public int getTypeId() {
+		return typeId;
 	}
 	/**
-	 * @return the xAxis
+	 * @param typeId the typeId to set
 	 */
-	public int getxAxis() {
-		return xAxis;
-	}
-	/**
-	 * @param xAxis the xAxis to set
-	 */
-	public void setxAxis(int xAxis) {
-		this.xAxis = xAxis;
-	}
-	/**
-	 * @return the yAxis
-	 */
-	public int getyAxis() {
-		return yAxis;
-	}
-	/**
-	 * @param yAxis the yAxis to set
-	 */
-	public void setyAxis(int yAxis) {
-		this.yAxis = yAxis;
+	public void setTypeId(int typeId) {
+		this.typeId = typeId;
 	}
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
@@ -84,11 +71,10 @@ public class RouteInfo {
 		builder.append(routeName);
 		builder.append(", number=");
 		builder.append(number);
-		builder.append(", xAxis=");
-		builder.append(xAxis);
-		builder.append(", yAxis=");
-		builder.append(yAxis);
+		builder.append(", typeId=");
+		builder.append(typeId);
 		builder.append("]");
 		return builder.toString();
 	}
+	
 }

@@ -19,6 +19,7 @@ import edu.gatech.BusSystem;
 
 /**
  * This class contains the implementation to of tranist system
+ * 
  * @author mythili
  *
  */
@@ -27,6 +28,7 @@ public class MetroServiceImpl implements MetroService {
 
 	@Autowired
 	MetroDataRepository metroDataRepository;
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -41,7 +43,10 @@ public class MetroServiceImpl implements MetroService {
 		List<StopInfo> stopInfos = metroDataRepository.getStopData();
 		if (stopInfos != null && !stopInfos.isEmpty()) {
 			for (StopInfo stopInfo : stopInfos) {
-				martaModel.makeStop(stopInfo.getStopId(), stopInfo.getName(), stopInfo.getxAxis(), stopInfo.getyAxis());
+				// TODO Add the appropriate method to set the info to martamodel for both Bus
+				// and Train type
+				// martaModel.makeStop(stopInfo.getStopId(), stopInfo.getName(),
+				// stopInfo.getxAxis(), stopInfo.getyAxis());
 			}
 			System.out.println(stopInfos.size() + " stops added");
 		}
@@ -51,9 +56,10 @@ public class MetroServiceImpl implements MetroService {
 		List<RouteInfo> routeInfos = metroDataRepository.getRouteData();
 		if (routeInfos != null && !routeInfos.isEmpty()) {
 			for (RouteInfo routeInfo : routeInfos) {
-				martaModel.makeRoute(routeInfo.getRouteId(), routeInfo.getNumber(), routeInfo.getRouteName());
-				// initialize the list of stops for the route as needed
-				routeLists.putIfAbsent(routeInfo.getRouteId(), new ArrayList<Integer>());
+				// TODO Add the appropriate method to set the info to martamodel for both Bus
+				// and Train type
+				// martaModel.makeRoute(routeInfo.getRouteId(), routeInfo.getNumber(),
+				// routeInfo.getRouteName());
 			}
 			System.out.println(routeInfos.size() + " Routes added");
 		}
@@ -64,7 +70,7 @@ public class MetroServiceImpl implements MetroService {
 		if (routeStopInfos != null && !routeStopInfos.isEmpty()) {
 			for (RouteStopInfo routeStopInfo : routeStopInfos) {
 				targetList = routeLists.get(routeStopInfo.getRouteId());
-				if (!targetList.contains(routeStopInfo.getStopId())) {
+				if (targetList != null && !targetList.contains(routeStopInfo.getStopId())) {
 					martaModel.appendStopToRoute(routeStopInfo.getRouteId(), routeStopInfo.getStopId(), 0);
 					targetList.add(routeStopInfo.getStopId());
 				}
@@ -76,7 +82,7 @@ public class MetroServiceImpl implements MetroService {
 		System.out.print(" extracting and adding the StopRoad: ");
 		List<StopRoadInfo> stopRoadInfos = metroDataRepository.getStopRoadData();
 		if (stopRoadInfos != null && !stopRoadInfos.isEmpty()) {
-			// Add the appropriate method to set the info to martamodel
+			// TODO Add the appropriate method to set the info to martamodel
 			System.out.println(stopRoadInfos.size() + " StopRoad added");
 		}
 
@@ -84,7 +90,7 @@ public class MetroServiceImpl implements MetroService {
 		System.out.print(" extracting and adding the Rider: ");
 		List<RiderInfo> riderInfos = metroDataRepository.getRiderInfo();
 		if (riderInfos != null && !riderInfos.isEmpty()) {
-			// Add the appropriate method to set the info to martamodel
+			// TODO Add the appropriate method to set the info to martamodel
 			System.out.println(riderInfos.size() + " Riders added");
 		}
 
@@ -94,8 +100,8 @@ public class MetroServiceImpl implements MetroService {
 		if (roadInfos != null && !roadInfos.isEmpty()) {
 			for (Road roadInfo : roadInfos) {
 				martaModel.makeRoad(roadInfo);
-				System.out.println(roadInfos.size() + " Roads added");
 			}
+			System.out.println(roadInfos.size() + " Roads added");
 		}
 
 	}
