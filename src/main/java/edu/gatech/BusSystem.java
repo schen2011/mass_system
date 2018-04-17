@@ -10,7 +10,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 
-public class BusSystem implements MetroSystem {
+public class BusSystem {
     private HashMap<Integer, BusStop> stops;
     private HashMap<Integer, BusRoute> routes;
     private HashMap<Integer, Bus> buses;
@@ -38,10 +38,9 @@ public class BusSystem implements MetroSystem {
         return null;
     }
 
-    //no need to provide the # of waiting riders when adding stops
-    public int makeStop(int uniqueID, String inputName, double inputXCoord, double inputYCoord) {
+    public int makeStop(int uniqueID, String inputName, int inputRiders, double inputXCoord, double inputYCoord) {
         // int uniqueID = stops.size();
-        stops.put(uniqueID, new BusStop(uniqueID, inputName, inputXCoord, inputYCoord));
+        stops.put(uniqueID, new BusStop(uniqueID, inputName, inputRiders, inputXCoord, inputYCoord));
         return uniqueID;
     }
 
@@ -62,12 +61,7 @@ public class BusSystem implements MetroSystem {
         return uniqueID;
     }
 
-    //need to provide # of waiting riders for specific route when append stop to route
-    public void appendStopToRoute(int routeID, int nextStopID, int inputRiders)
-    {
-        routes.get(routeID).addNewStop(nextStopID);
-        stops.get(nextStopID).addNewRoute(routeID, inputRiders);
-    }
+    public void appendStopToRoute(int routeID, int nextStopID) { routes.get(routeID).addNewStop(nextStopID); }
 
     public HashMap<Integer, BusStop> getStops() { return stops; }
 
@@ -85,7 +79,7 @@ public class BusSystem implements MetroSystem {
     	
     	try{
             // create new file access path
-            String path="./mts_digraph.dot";
+            String path="./bus.dot";
             File file = new File(path);
 
             // create the file if it doesn't exist

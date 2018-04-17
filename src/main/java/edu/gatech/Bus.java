@@ -1,6 +1,6 @@
 package edu.gatech;
 
-public class Bus implements Vehicle{
+public class Bus {
     private Integer ID;
     private Integer route;
     private Integer nextLocation;
@@ -23,7 +23,6 @@ public class Bus implements Vehicle{
         this.speed = -1;
     }
 
-    // assumption: all the passengers in the bus are taking the same route
     public Bus(int uniqueValue, int inputRoute, int inputLocation, int inputPassengers, int inputCapacity, int inputSpeed) {
         this.ID = uniqueValue;
         this.route = inputRoute;

@@ -1,3 +1,4 @@
+
 create table admin_users
 (
    name varchar(255) not null,

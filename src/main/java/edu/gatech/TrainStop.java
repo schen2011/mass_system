@@ -37,7 +37,7 @@ public class TrainStop {
         rateCatchingTrain = new HashMap<Integer, int[]>();
         rateLeavingTrain = new HashMap<Integer, int[]>();
         this.waiting = inputRiders;
-    }
+   }
 
     public void setName(String inputName) { this.stopName = inputName; }
 
@@ -143,4 +143,3 @@ public class TrainStop {
     }
 
 }
-
