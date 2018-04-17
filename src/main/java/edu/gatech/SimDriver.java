@@ -116,6 +116,7 @@ public class SimDriver {
                     trainModel.displayModel();
                 	break;
 
+                // added Di's function
                 case "search_routes":
                     int stID = Integer.parseInt(tokens[1]);
                     int dstID = Integer.parseInt(tokens[2]);
