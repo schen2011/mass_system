@@ -32,10 +32,9 @@ public class SimQueue {
                     BusStop activeStop = busModel.getStop(activeStopID);
                     System.out.println(" the bus is currently at stop: " + Integer.toString(activeStop.getID()) + " - " + activeStop.getName());
 
-                    // to be modified
                     // drop off and pickup new passengers at current stop
                     int currentPassengers = activeBus.getPassengers();
-                    int passengerDifferential = activeStop.exchangeRiders(activeEvent.getRank(), currentPassengers, activeBus.getCapacity(),activeBus.getRouteID());
+                    int passengerDifferential = activeStop.exchangeRiders(activeEvent.getRank(), currentPassengers, activeBus.getCapacity());
                     System.out.println(" passengers pre-stop: " + Integer.toString(currentPassengers) + " post-stop: " + (currentPassengers + passengerDifferential));
                     activeBus.adjustPassengers(passengerDifferential);
 

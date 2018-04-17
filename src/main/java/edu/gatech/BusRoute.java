@@ -2,7 +2,7 @@ package edu.gatech;
 
 import java.util.HashMap;
 
-public class BusRoute implements Route {
+public class BusRoute {
     private Integer ID;
     private Integer routeNumber;
     private String routeName;
@@ -53,6 +53,9 @@ public class BusRoute implements Route {
     }
 
     public Integer getStopID(int routeLocation) { return this.stopsOnRoute.get(routeLocation); }
+    public boolean hasStop(int stopID) { return stopsOnRoute.containsValue(stopID); }
+
+
 
     public Integer getLength() { return this.stopsOnRoute.size(); }
 
