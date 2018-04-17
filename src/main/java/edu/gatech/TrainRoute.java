@@ -38,6 +38,8 @@ public class TrainRoute implements Route {
 
     public String getName() { return this.routeName; }
 
+    public boolean hasStop(int stopID) { return stopsOnRoute.containsValue(stopID); }
+
     public void displayEvent() {
         System.out.println(" train route: " + Integer.toString(this.ID));
     }

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.sql.*;
 import java.util.Properties;
+import java.util.List;
 
 public class SimDriver {
     private static SimQueue simEngine;
@@ -112,7 +113,37 @@ public class SimDriver {
 
                 case "display_model":
                 	martaModel.displayModel();
+                    trainModel.displayModel();
                 	break;
+
+                // added Di's function
+                case "search_routes":
+                    int stID = Integer.parseInt(tokens[1]);
+                    int dstID = Integer.parseInt(tokens[2]);
+                    List<Integer> busRouteChoice= new ArrayList<Integer>();
+                    List<Integer> trainRouteChoice= new ArrayList<Integer>();
+                    System.out.println("Take below routes from stop "+tokens[1]+" to stop "+tokens[2] );
+                    for ( BusRoute route: martaModel.getRoutes().values()){
+                        if (route.hasStop(stID) && route.hasStop(dstID)){
+                        busRouteChoice.add(route.getID());
+                        }
+                    }
+
+                    for (int i: busRouteChoice) {
+                        System.out.println("Take Bus Route " + i );
+                    }
+
+                    for ( TrainRoute route: trainModel.getRoutes().values()){
+                        if (route.hasStop(stID) && route.hasStop(dstID)){
+                            trainRouteChoice.add(route.getID());
+                        }
+                    }
+
+                    for (int i: trainRouteChoice) {
+                        System.out.println("Take Train Route " + i );
+                    }
+                    break;
+
                 case "quit":
                     System.out.println(" stop the command loop");
                     break;

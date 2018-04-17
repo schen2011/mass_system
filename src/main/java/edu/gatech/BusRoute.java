@@ -54,6 +54,8 @@ public class BusRoute implements Route {
 
     public Integer getStopID(int routeLocation) { return this.stopsOnRoute.get(routeLocation); }
 
+    public boolean hasStop(int stopID) { return stopsOnRoute.containsValue(stopID); }
+
     public Integer getLength() { return this.stopsOnRoute.size(); }
 
     public void displayInternalStatus() {
