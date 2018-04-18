@@ -23,10 +23,8 @@ import java.util.List;
 @Controller
 public class MetroSystemController implements MetroSystemActions {
 
-	/*
 	@Autowired
 	UserRepository userRepository;
-	*/
 
 	@Autowired
 	MetroService metroService;
@@ -55,14 +53,14 @@ public class MetroSystemController implements MetroSystemActions {
 	@RequestMapping(path = "/client", method = RequestMethod.GET)
 	@ResponseBody
 	public String client() {
-
+		
 		try {
 			return "client";
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "error";
 		}
-
+		
 	}
 
 	@RequestMapping(path = "/fetchAdminData", method = RequestMethod.GET)
@@ -81,11 +79,11 @@ public class MetroSystemController implements MetroSystemActions {
 			e.printStackTrace();
 			return "Exception occured when retrieving Transit Data";
 		}
-
+		
 
 	}
-
-
+	
+	
 	//TEST
 	@RequestMapping(path = "/getRoutes", method = RequestMethod.GET)
 	@ResponseBody
@@ -96,47 +94,51 @@ public class MetroSystemController implements MetroSystemActions {
 			e.printStackTrace();
 			return "Error";
 		}
-
+		
 
 	}
 
-
+	
 	@RequestMapping(path = "/getAllRoutes", method = RequestMethod.GET)
 	@ResponseBody
 	@Override
 	public List<String> getRoute(int startStopID, int destinationStopID) {
 
 
-		// get data from DB
+        // get data from DB
 		List<RouteInfo> routeInfos = metroDataRepository.getRouteData();
 		List<RouteStopInfo> routeStopInfos = metroDataRepository.getRouteStopData();
-		List<Road> busRouteRoads = metroDataRepository.getRoadData();
-		List<StopRoadInfo> stopRoadInfos = metroDataRepository.getStopRoadData();
+        List<Road> busRouteRoads = metroDataRepository.getRoadData();
+        List<StopRoadInfo> stopRoadInfos = metroDataRepository.getStopRoadData();
 
-		//may not need
+        //may not need
 		List<Integer> busRouteChoice= new ArrayList<Integer>();
 		List<Integer> trainRouteChoice= new ArrayList<Integer>();
 
-		//output
-		List<String> pathOptions = new ArrayList<String>();
+        //output
+        List<String> pathOptions = new ArrayList<String>();
 
 		//loop list of routes
 		for (int i = 0; i < routeInfos.size(); i++) {
 
-			RouteInfo routeInfo = routeInfos.get(i);
+            RouteInfo routeInfo = routeInfos.get(i);
+            routeInfo.setStopsOnRoute();
 
 			// loop list of route-stops
-			for(int j = 0; i < routeStopInfos.size(); j++){
+			for(int j = 0; j < routeStopInfos.size(); j++){
 
 				RouteStopInfo routeStopInfo = routeStopInfos.get(j);
 
 				if (routeStopInfo.getRouteId()== routeInfo.getRouteId()){
 
-					routeInfo.addNewStop(routeStopInfo.getStopId());
-				}
+					 //for debug: pathOptions.add("route:" + routeStopInfo.getRouteId() + "; add new stop:" + routeStopInfo.getStopId());
+					 routeInfo.addNewStop(routeStopInfo.getStopId());
+					 
+				 }
 
 			}
 
+	
 		}
 
 		//loop again list of routes
@@ -144,73 +146,86 @@ public class MetroSystemController implements MetroSystemActions {
 
 			RouteInfo routeInfo = routeInfos.get(i);
 
-			// identify the route that has both start ID and destination ID
+            // identify the route that has both start ID and destination ID
 			if (routeInfo.hasStop(startStopID) && routeInfo.hasStop(destinationStopID)){
 
 				//bus
 				if (routeInfo.getTypeId() ==0 ){
 
-					busRouteChoice.add(routeInfo.getRouteId());
+                    busRouteChoice.add(routeInfo.getRouteId());
 
-					// list of roads between startStopId and destinationStopId
-					List<Integer> roads= new ArrayList<Integer>();
+                    // list of roads between startStopId and destinationStopId
+                    List<Integer> roads= new ArrayList<Integer>();
 
-					int currentStop = startStopID;
-					int currentLocation = routeInfo.getCurrentLocation(currentStop);
-					int nextLocation = routeInfo.getNextLocation(currentLocation);
-					int nextStopID = routeInfo.getStopID(nextLocation);
+                    int currentStop = startStopID;
+                    int currentLocation = routeInfo.getCurrentLocation(currentStop);
+                    int nextLocation = routeInfo.getNextLocation(currentLocation);
+                    int nextStopID = routeInfo.getStopID(nextLocation);
 
-					//iterate the stopRoadInfo to get the road list
-					do {
+                    //iterate the stopRoadInfo to get the road list
+                    do {
 
-						for (int j = 0; j < stopRoadInfos.size(); j++){
+                    	/* for debug
+                    	pathOptions.add("current location:" + currentLocation);
+                    	pathOptions.add("current stop:" + currentStop);
+                    	pathOptions.add("next location:" + nextLocation);
+                    	pathOptions.add("next stop:" + nextStopID);
+                    	*/
+                    	
+                    	for (int j = 0; j < stopRoadInfos.size(); j++){
 
-							StopRoadInfo stopRoadInfo = stopRoadInfos.get(j);
+                            StopRoadInfo stopRoadInfo = stopRoadInfos.get(j);
 
-							if ((stopRoadInfo.getStopIdStart() == currentLocation) && (stopRoadInfo.getStopIdEnd()==nextStopID)){}
-							{
+                            if ((stopRoadInfo.getStopIdStart() == currentStop) && (stopRoadInfo.getStopIdEnd()==nextStopID))
+                            {
+                                roads.add(stopRoadInfo.getRoadId());
+                            }
+                        }
+                    	
+                    	currentStop = nextStopID;
+                        currentLocation = nextLocation;
+                        nextLocation = routeInfo.getNextLocation(currentLocation);
+                        nextStopID = routeInfo.getStopID(nextLocation);
 
-								roads.add(stopRoadInfo.getRoadId());
 
-							}
-						}
+                    } while(currentStop!= destinationStopID);
 
-						currentStop = nextStopID;
-						currentLocation = routeInfo.getCurrentLocation(currentStop);
-						nextLocation = routeInfo.getNextLocation(currentLocation);
-						nextStopID = routeInfo.getStopID(nextLocation);
+                    //loop list of roads to get the length, and travel time
 
-					}while(nextStopID!= destinationStopID);
+                    Double travelTime =0.0;
+                    
+                    Double travelLength  = 0.0;
+                    
+                    
+                    for (int k = 0; k < roads.size(); k++){
 
-					//loop list of roads to get the length, and travel time
+                    	//for debug: pathOptions.add("Road:" + roads.get(k));
+                        
+                    	for (int z = 0; z < busRouteRoads.size(); z++){
 
-					Double travelTime =0.0;
-					Double travelLength  = 0.0;
+                            Road road = busRouteRoads.get(z);
 
-					for (int k = 0; k < roads.size(); k++){
+                            if (roads.get(k) == road.getRoadId()){
 
-						for (int z = 0; z < busRouteRoads.size(); z++){
+                                travelLength = travelLength + road.getRoadLength();
+                                travelTime = travelTime  + (road.getRoadLength()/road.getAverageSpeed());
+                                z = busRouteRoads.size();
+                            }
 
-							Road road = busRouteRoads.get(z);
+                        }
+                    }
 
-							if (roads.get(k) == road.getRoadId()){
+                    pathOptions.add("Option: take Bus Route: " + routeInfo.getRouteId() + "; total length: " + travelLength + "miles; total travel time: " + travelTime + "hours;");
 
-								travelLength = travelLength + road.getRoadLength();
-								travelTime = travelTime  + (road.getRoadLength()/road.getAverageSpeed());
-								z = busRouteRoads.size();
-							}
-
-						}
-					}
-
-					pathOptions.add("Option: take Route: " + routeInfo.getRouteId() + "; total length: " + travelLength + "; total travel time: " + travelTime);
-
-				}
+                } // end bus
 
 				else
+					// TODO: 4/18/2018 : add train option
 					trainRouteChoice.add(routeInfo.getRouteId());
-			}
-		}
+				
+			} // end if route
+			
+		} // end for
 
 		return pathOptions;
 	}

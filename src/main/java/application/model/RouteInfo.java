@@ -19,6 +19,11 @@ public class RouteInfo {
 	/**
 	 * @return the routeId
 	 */
+	
+	public RouteInfo() {
+        this.stopsOnRoute = new HashMap<Integer, Integer>();
+    }
+	
 	public int getRouteId() {
 		return routeId;
 	}
@@ -67,20 +72,31 @@ public class RouteInfo {
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
+	
+	public void setStopsOnRoute(){
+		
+		this.stopsOnRoute.clear();
+	}
+	
+	public HashMap<Integer, Integer> getStopsOnRoute(){
+		
+		return this.stopsOnRoute;
+	}
 
 	public void addNewStop(int stopID) { this.stopsOnRoute.put(stopsOnRoute.size(), stopID); }
 
 	public boolean hasStop(int stopID) { return stopsOnRoute.containsValue(stopID); }
 
-	public Integer getCurrentLocation(int routeId) {
+	public Integer getCurrentLocation(int stopId) {
 
-		int currentLocation = -1;
+		int currentLocation=-1;
+		
+		for (int i = 0; i < this.stopsOnRoute.size(); i++) {
 
-		for (int i = 0; i < stopsOnRoute.size(); i++) {
-
-			if(stopsOnRoute.get(i)==routeId)
+			if(this.stopsOnRoute.get(i)==stopId){
 				currentLocation = i;
-				i=stopsOnRoute.size();
+				i=this.stopsOnRoute.size();
+			}
 		}
 		return currentLocation;
 	}
