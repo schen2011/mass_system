@@ -29,7 +29,7 @@ public class MetroDataRepository {
 
 	// JDBC driver name and database URL
 	static final String JDBC_DRIVER = "org.h2.Driver";
-	static final String DB_URL = "jdbc:h2:mem:testdb";
+	static final String DB_URL = "jdbc:h2:file:~/metrosystem";
 
 	// Database credentials
 	static final String USER = "sa";
