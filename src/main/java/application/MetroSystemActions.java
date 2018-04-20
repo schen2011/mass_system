@@ -8,6 +8,6 @@ public interface MetroSystemActions {
 	public void start();
 	
 	//
-	public List<String> getRoute(int startStopID, int destinationStopID);
+	public List<String> getRoute(int startStopID, int destinationStopID) throws Exception;
 	
 }
