@@ -218,12 +218,27 @@ public class MetroSystemController implements MetroSystemActions {
                     pathOptions.add("Option: take Bus Route: " + routeInfo.getRouteId() + "; total length: " + travelLength + "miles; total travel time: " + travelTime + "hours;");
 
                 } // end bus
+				else {
 
-				else
-					// TODO: 4/18/2018 : add train option
-					trainRouteChoice.add(routeInfo.getRouteId());
-				
-			} // end if route
+                    trainRouteChoice.add(routeInfo.getRouteId());
+
+                    //get location of start and end stop
+                    int startLocation = routeInfo.getCurrentLocation(startStopID);
+                    int endLocation = routeInfo.getCurrentLocation(destinationStopID);
+
+                    Double travelTime = 0.0;
+                    Double travelLength = 0.0;
+
+                    //assumption: 5.0 miles between train stops
+                    //speed assumption: 25 miles per hours
+
+                    travelLength = 5.0 * (endLocation - startLocation);
+                    travelTime = travelLength / 25;
+
+                    pathOptions.add("Option: take Train Route: " + routeInfo.getRouteId() + "; total length: " + travelLength + "miles; total travel time: " + String.format("%.2f", travelTime) + "hours;");
+                }
+
+            } // end if route
 			
 		} // end for
 

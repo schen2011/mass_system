@@ -1,4 +1,3 @@
-
 insert into admin_users
 values('Mythili','ABC');
 
@@ -9,8 +8,8 @@ insert into type(id, name) values(2, 'BOTH');
 insert into ROAD(name, length, speed, trafficstatus) values('ROAD1', 20.3, 20, 0);
 insert into ROAD(name, length, speed, trafficstatus) values('ROAD2', 21.3, 40, 0);
 insert into ROAD(name, length, speed, trafficstatus) values('ROAD3', 5.3, 40, 0);
-insert into ROAD(name, length, speed, trafficstatus) values('ROAD4', 100.3, 70, 0);
-insert into ROAD(name, length, speed, trafficstatus) values('ROAD5', 300.3, 50, 0);
+insert into ROAD(name, length, speed, trafficstatus) values('ROAD4', 12.4, 70, 0);
+insert into ROAD(name, length, speed, trafficstatus) values('ROAD5', 16.3, 50, 0);
 insert into ROAD(name, length, speed, trafficstatus) values('ROAD6', 30.3, 45, 0);
 insert into ROAD(name, length, speed, trafficstatus) values('ROAD7', 50.3, 30, 0);
 insert into ROAD(name, length, speed, trafficstatus) values('ROAD8', 20.15, 40, 0);
@@ -40,6 +39,7 @@ insert into STOPROAD(stopid_s, stopid_e, roadid) values(2, 3, 4);
 insert into STOPROAD(stopid_s, stopid_e, roadid) values(2, 3, 5);
 insert into STOPROAD(stopid_s, stopid_e, roadid) values(3, 4, 6);
 insert into STOPROAD(stopid_s, stopid_e, roadid) values(4, 5, 7);
+insert into STOPROAD(stopid_s, stopid_e, roadid) values(2, 4, 8);
 
 insert into ROUTESTOP(routeid, stopid) values(1, 1);
 insert into ROUTESTOP(routeid, stopid) values(1, 2);
@@ -50,3 +50,7 @@ insert into ROUTESTOP(routeid, stopid) values(1, 5);
 insert into ROUTESTOP(routeid, stopid) values(2, 1);
 insert into ROUTESTOP(routeid, stopid) values(2, 2);
 insert into ROUTESTOP(routeid, stopid) values(2, 5);
+
+insert into ROUTESTOP(routeid, stopid) values(3, 1);
+insert into ROUTESTOP(routeid, stopid) values(3, 3);
+insert into ROUTESTOP(routeid, stopid) values(3, 4);
