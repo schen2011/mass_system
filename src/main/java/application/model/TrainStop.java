@@ -2,8 +2,11 @@ package application.model;
 
 import java.util.Random;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Queue;
 
-public class TrainStop {
+public class TrainStop implements Stop {
     private Integer ID;
     private String stopName;
     private Double xCoord;
@@ -12,7 +15,8 @@ public class TrainStop {
     private HashMap<Integer, int[]> rateCatchingTrain;
     private HashMap<Integer, int[]> rateLeavingTrain;
     private Integer waiting;
-   
+    private HashMap<Integer, Queue<Rider>> waitingQueue;
+
 
     public TrainStop() {
         this.ID = -1;
@@ -27,6 +31,7 @@ public class TrainStop {
         rateCatchingTrain = new HashMap<Integer, int[]>();
         rateLeavingTrain = new HashMap<Integer, int[]>();
         this.waiting = 0;
+        this.waitingQueue = new HashMap<>();
     }
 
     public TrainStop(int uniqueValue, String inputName, int inputRiders, double inputXCoord, double inputYCoord) {
@@ -38,6 +43,7 @@ public class TrainStop {
         rateCatchingTrain = new HashMap<Integer, int[]>();
         rateLeavingTrain = new HashMap<Integer, int[]>();
         this.waiting = inputRiders;
+        this.waitingQueue = new HashMap<>();
    }
 /*
     public TrainStop(int uniqueValue, String inputName, int inputRiders, double inputXCoord, double inputYCoord, double length, double trafficstatus, int routeID) {
@@ -125,8 +131,95 @@ public class TrainStop {
         return finalPassengerCount - initialPassengerCount;
     }
 
-    public void addNewRiders(int moreRiders) { waiting = waiting + moreRiders; }
+    public void exchangeRiders(Train train) {
+    	Iterator<Rider> riders = train.getRiderList().iterator();
+    	while (riders.hasNext()) {
+    		Rider r = riders.next();
+    		if (r != null && r.getDestinationStopId() == this.ID) {
+    			riders.remove();
+    		}
+    	}
+    	int spaceLeft = train.getCapacity() - train.getRiderList().size();
+    	Queue<Rider> waitingRider = waitingQueue.get(train.getRouteID());
+    	while (spaceLeft > 0 && !waitingRider.isEmpty()) {
+    		train.getRiderList().add(waitingRider.poll());
+    		spaceLeft--;
+    	}
+    }
+    
+    
+    public String getStopName() {
+		return stopName;
+	}
 
+	public void setStopName(String stopName) {
+		this.stopName = stopName;
+	}
+
+	public Double getxCoord() {
+		return xCoord;
+	}
+
+	public void setxCoord(Double xCoord) {
+		this.xCoord = xCoord;
+	}
+
+	public Double getyCoord() {
+		return yCoord;
+	}
+
+	public void setyCoord(Double yCoord) {
+		this.yCoord = yCoord;
+	}
+
+	public Random getRandGenerator() {
+		return randGenerator;
+	}
+
+	public void setRandGenerator(Random randGenerator) {
+		this.randGenerator = randGenerator;
+	}
+
+	public HashMap<Integer, int[]> getRateCatchingTrain() {
+		return rateCatchingTrain;
+	}
+
+	public void setRateCatchingTrain(HashMap<Integer, int[]> rateCatchingTrain) {
+		this.rateCatchingTrain = rateCatchingTrain;
+	}
+
+	public HashMap<Integer, int[]> getRateLeavingTrain() {
+		return rateLeavingTrain;
+	}
+
+	public void setRateLeavingTrain(HashMap<Integer, int[]> rateLeavingTrain) {
+		this.rateLeavingTrain = rateLeavingTrain;
+	}
+
+	public HashMap<Integer, Queue<Rider>> getWaitingQueue() {
+		return waitingQueue;
+	}
+
+	public void setWaitingQueue(HashMap<Integer, Queue<Rider>> waitingQueue) {
+		this.waitingQueue = waitingQueue;
+	}
+
+	public void setID(Integer iD) {
+		ID = iD;
+	}
+
+	public void setWaiting(Integer waiting) {
+		this.waiting = waiting;
+	}
+
+	public void addNewRiders(int moreRiders) { waiting = waiting + moreRiders; }
+    
+    public void addNewRiders(Rider rider) {
+    	int routeId = rider.getRouteId();
+    	this.waitingQueue.putIfAbsent(routeId, new LinkedList<>());
+    	this.waitingQueue.get(rider.getRouteId()).add(rider);
+    }
+    
     public void displayInternalStatus() {
         System.out.print("> stop - ID: " + Integer.toString(ID));
         System.out.print(" name: " + stopName + " waiting: " + Integer.toString(waiting));

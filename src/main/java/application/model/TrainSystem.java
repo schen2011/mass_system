@@ -1,34 +1,37 @@
 package application.model;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 
-public class TrainSystem {
+public class TrainSystem implements MetroSystem {
     private HashMap<Integer, TrainStop> stops;
     private HashMap<Integer, TrainRoute> routes;
     private HashMap<Integer, Train> trains;
+    private HashMap<Integer, Road> roads;
 
     public TrainSystem() {
         stops = new HashMap<Integer, TrainStop>();
         routes = new HashMap<Integer, TrainRoute>();
         trains = new HashMap<Integer, Train>();
+        roads = new HashMap<Integer, Road>();
     }
-/*
+    
     public TrainStop getStop(int stopID) {
         if (stops.containsKey(stopID)) { return stops.get(stopID); }
         return null;
     }
-*/
+
     public TrainRoute getRoute(int routeID) {
         if (routes.containsKey(routeID)) { return routes.get(routeID); }
         return null;
     }
 
-    public Train gettrain(int trainID) {
+    public Train getTrain(int trainID) {
         if (trains.containsKey(trainID)) { return trains.get(trainID); }
         return null;
     }
@@ -38,6 +41,13 @@ public class TrainSystem {
         stops.put(uniqueID, new TrainStop(uniqueID, inputName, inputRiders, inputXCoord, inputYCoord));
         return uniqueID;
     }
+    
+    public int makeRoad(Integer uniqueID, String roadName, 
+			double roadLength, double averageSpeed, int trafficIndicator) {
+    	roads.put(uniqueID, new Road(uniqueID, roadName, roadLength, averageSpeed, trafficIndicator));
+    	return uniqueID;
+    }
+    
     public void appendRoadToRoute(int routeID, double length, double speed, double trafficstatus) { routes.get(routeID).addNewRoad(length, speed, trafficstatus); }
 
     public int makeRoute(int uniqueID, int inputNumber, String inputName) {
@@ -46,9 +56,10 @@ public class TrainSystem {
         return uniqueID;
     }
 
-    public int makeTrain(int uniqueID, int inputRoute, int inputLocation, int inputPassengers, int inputCapacity, int inputSpeed, String direction) {
+    public int makeTrain(int uniqueID, int inputRoute, int inputLocation, int inputLocation2, int inputPassengers, int inputCapacity, int inputSpeed, String direction) {
         // int uniqueID = trains.size();
-        trains.put(uniqueID, new Train(uniqueID, inputRoute, inputLocation, inputPassengers, inputCapacity, inputSpeed, direction));
+        trains.put(uniqueID, new Train(uniqueID, inputRoute, 
+        		inputLocation, inputLocation2, inputPassengers, inputCapacity, inputSpeed, direction));
         return uniqueID;
     }
 
@@ -59,6 +70,43 @@ public class TrainSystem {
     public HashMap<Integer, TrainRoute> getRoutes() { return routes; }
 
     public HashMap<Integer, Train> getTrains() { return trains; }
+    
+    public HashMap<Integer, Road> getRoads() {
+    	return roads;
+    }
+    
+    public MovingHistory moveTrain(Train train) {
+    	System.out.println("what is the current location" + train.getCurrentLocation());
+    	TrainStop currentStop = stops.get(train.getCurrentLocation());
+    	if (train.getRiderList().isEmpty()) {
+    		train.setRiderList(new ArrayList<>());
+    	}
+    	int currentRider = train.getRiderList().size();
+    	if (currentStop.getWaitingQueue().isEmpty()) {
+    		currentStop.setWaitingQueue(new HashMap<>());
+    	}
+    	if (!currentStop.getWaitingQueue().containsKey(train.getRouteID())) {
+    		currentStop.getWaitingQueue().put(train.getRouteID(), new LinkedList<>());
+    	}
+    	int riderWaiting = currentStop.getWaitingQueue().get(train.getRouteID()).size();
+    	currentStop.exchangeRiders(train);
+    	int afterExchange = train.getRiderList().size();
+    	//load rider first
+    	int nextStop = train.getNextLocation();
+    	train.setCurrentLocation(train.getNextLocation());
+    	return saveMovingHistory(currentStop.getID(), currentRider, riderWaiting, afterExchange, nextStop);
+    }
+    
+    private MovingHistory saveMovingHistory(int currentStop, int currentRider, int riderWaiting, int afterExchange,
+			int nextStop) {
+		MovingHistory moveHistory = new MovingHistory();
+		moveHistory.setCurrentStop(stops.get(currentStop).getName());
+		moveHistory.setCurrentRider(currentRider);
+		moveHistory.setPeopleWaiting(riderWaiting);
+		moveHistory.setNewRider(afterExchange - currentRider);
+		moveHistory.setNextStop(stops.get(nextStop).getName());
+		return moveHistory;
+	}    
     
     public void displayModel() {
     	ArrayList<MiniPair> trainNodes, stopNodes;
@@ -110,10 +158,10 @@ public class TrainSystem {
             for (Train m: trains.values()) {
             	//System.out.println(m.getRouteID());
             	//System.out.println(routes.get(m.getRouteID()));
-            	Integer prevStop = routes.get(m.getRouteID()).getStopID(m.getPastLocation());
-            	Integer nextStop = routes.get(m.getRouteID()).getStopID(m.getLocation());
-            	bw.write("  stop" + Integer.toString(prevStop) + " -> train" + Integer.toString(m.getID()) + " [ label=\" dep\" ];\n");
-            	bw.write("  train" + Integer.toString(m.getID()) + " -> stop" + Integer.toString(nextStop) + " [ label=\" arr\" ];\n");
+            	//Integer prevStop = routes.get(m.getRouteID()).getStopID(m.getNextLocation());
+            	//Integer nextStop = routes.get(m.getRouteID()).getStopID(m.getLocation());
+            	//bw.write("  stop" + Integer.toString(prevStop) + " -> train" + Integer.toString(m.getID()) + " [ label=\" dep\" ];\n");
+            	//bw.write("  train" + Integer.toString(m.getID()) + " -> stop" + Integer.toString(nextStop) + " [ label=\" arr\" ];\n");
             }
 
             bw.write("}\n");
@@ -123,4 +171,16 @@ public class TrainSystem {
     		System.out.println(e);
     	}
     }
+	public void setStops(HashMap<Integer, TrainStop> stops) {
+		this.stops = stops;
+	}
+	public void setRoutes(HashMap<Integer, TrainRoute> routes) {
+		this.routes = routes;
+	}
+	public void setTrains(HashMap<Integer, Train> trains) {
+		this.trains = trains;
+	}
+	public void setRoads(HashMap<Integer, Road> roads) {
+		this.roads = roads;
+	}
 }

@@ -1,11 +1,5 @@
 package application.model;
 
-/**
- * Road class
- * 
- * @author mythili
- *
- */
 public class Road {
 	private Integer roadId;
 	private String roadName;
@@ -17,7 +11,8 @@ public class Road {
 		
 	}
 
-	public Road(Integer roadId, String roadName, double roadLength, double averageSpeed, int trafficIndicator) {
+	public Road(Integer roadId, String roadName, 
+			double roadLength, double averageSpeed, int trafficIndicator) {
 		super();
 		this.roadId = roadId;
 		this.roadName = roadName;

@@ -1,5 +1,6 @@
 package application.model;
 
-public interface MetroSystem {
+import java.util.Hashtable;
 
+public interface MetroSystem {
 }

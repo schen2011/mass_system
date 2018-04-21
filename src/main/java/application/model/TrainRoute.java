@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class TrainRoute {
+public class TrainRoute implements Route {
     private Integer ID;
     private Integer routeNumber;
     private String routeName;

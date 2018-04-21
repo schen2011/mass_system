@@ -1,14 +1,18 @@
 package application.model;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Queue;
+
 public class Bus {
 	private Integer ID;
 	private Integer route;
 	private Integer currentLocation;
 	private Integer nextLocation;
-	private Integer prevLocation;
 	private Integer passengers;
 	private Integer capacity;
-	private Integer speed; // given in statute miles per hour
+	private Integer speed; 
+	private List<Rider> riderList;
 	private String direction;
 
 	public Bus() {
@@ -18,31 +22,27 @@ public class Bus {
 	public Bus(int uniqueValue) {
 		this.ID = uniqueValue;
 		this.route = -1;
-		this.nextLocation = -1;
 		this.currentLocation = -1;
-		this.prevLocation = -1;
+		this.nextLocation = -1;
 		this.passengers = -1;
 		this.capacity = -1;
 		this.speed = -1;
 	}
 
-	public Bus(int uniqueValue, int inputRoute, int inputLocation, int inputPassengers, int inputCapacity,
+	public Bus(int uniqueValue, int inputRoute, int inputLocation, int inputLocation2,
+			int inputPassengers, int inputCapacity,
 			int inputSpeed, String direction) {
 		this.ID = uniqueValue;
 		this.route = inputRoute;
-		this.nextLocation = -1;
 		this.currentLocation = inputLocation;
-		this.prevLocation = -1;		
+		this.nextLocation = inputLocation2;
 		this.passengers = inputPassengers;
 		this.capacity = inputCapacity;
 		this.speed = inputSpeed;
+		this.riderList = new ArrayList<>();
 		this.direction = direction;
 	}
-
-	public void setRoute(int inputRoute) {
-		this.route = inputRoute;
-	}
-
+	
 	public Integer getRoute() {
 		return route;
 	}
@@ -51,9 +51,44 @@ public class Bus {
 		this.route = route;
 	}
 
-	public void setLocation(int inputLocation) {
-		this.prevLocation = this.nextLocation;
-		this.nextLocation = inputLocation;
+	public Integer getNextLocation() {
+		return nextLocation;
+	}
+
+	public void setNextLocation(Integer nextLocation) {
+		this.nextLocation = nextLocation;
+	}
+
+	public String getDirection() {
+		return direction;
+	}
+
+	public void setDirection(String direction) {
+		this.direction = direction;
+	}
+
+	public List<Rider> getRiderList() {
+		return riderList;
+	}
+
+	public void setRiderList(List<Rider> riderList) {
+		this.riderList = riderList;
+	}
+
+	public void setID(Integer iD) {
+		ID = iD;
+	}
+
+	public void setPassengers(Integer passengers) {
+		this.passengers = passengers;
+	}
+
+	public void setCapacity(Integer capacity) {
+		this.capacity = capacity;
+	}
+
+	public void setSpeed(Integer speed) {
+		this.speed = speed;
 	}
 
 	public void setPassengers(int inputPassengers) {
@@ -75,15 +110,7 @@ public class Bus {
 	public Integer getRouteID() {
 		return this.route;
 	}
-
-	public Integer getLocation() {
-		return this.nextLocation;
-	}
-
-	public Integer getPastLocation() {
-		return this.prevLocation;
-	}
-
+	
 	public Integer getPassengers() {
 		return this.passengers;
 	}
@@ -129,14 +156,6 @@ public class Bus {
 			}
 		}
 		return result;
-	}
-
-	public String getDirection() {
-		return direction;
-	}
-
-	public void setDirection(String direction) {
-		this.direction = direction;
 	}
 
 	public Integer getCurrentLocation() {

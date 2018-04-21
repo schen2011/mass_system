@@ -1,17 +1,28 @@
 package application.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Train {
     private Integer ID;
     private Integer route;
     private Integer nextLocation;
     private Integer currentLocation;
-    private Integer prevLocation;
     private Integer passengers;
     private Integer capacity;
     private Integer speed; // given in statute miles per hour
     private String direction;
+	private List<Rider> riderList;
 
-    public Train() {
+    public List<Rider> getRiderList() {
+		return riderList;
+	}
+
+	public void setRiderList(List<Rider> riderList) {
+		this.riderList = riderList;
+	}
+
+	public Train() {
         this.ID = -1;
     }
 
@@ -20,23 +31,23 @@ public class Train {
         this.route = -1;
         this.nextLocation = -1;
         this.currentLocation = -1;
-        this.prevLocation = -1;
         this.passengers = -1;
         this.capacity = -1;
         this.speed = -1;
         this.direction = null;
+		this.riderList = new ArrayList<>();
     }
 
-    public Train(int uniqueValue, int inputRoute, int inputLocation, int inputPassengers, int inputCapacity, int inputSpeed, String direction) {
+    public Train(int uniqueValue, int inputRoute, int inputLocation, int inputLocation2, int inputPassengers, int inputCapacity, int inputSpeed, String direction) {
         this.ID = uniqueValue;
         this.route = inputRoute;
-        this.nextLocation = inputLocation;
-        this.prevLocation = inputLocation;
+        this.nextLocation = inputLocation2;
 		this.currentLocation = inputLocation;
         this.passengers = inputPassengers;
         this.capacity = inputCapacity;
         this.speed = inputSpeed;
         this.direction = direction;
+		this.riderList = new ArrayList<>();
    }
 
     
@@ -51,11 +62,34 @@ public class Train {
 	}
 
 	public void setLocation(int inputLocation) {
-    	this.prevLocation = this.nextLocation;
     	this.nextLocation = inputLocation;
     }
 
-    public void setPassengers(int inputPassengers) { this.passengers = inputPassengers; }
+    public Integer getNextLocation() {
+		return nextLocation;
+	}
+
+	public void setNextLocation(Integer nextLocation) {
+		this.nextLocation = nextLocation;
+	}
+
+	public void setID(Integer iD) {
+		ID = iD;
+	}
+
+	public void setPassengers(Integer passengers) {
+		this.passengers = passengers;
+	}
+
+	public void setCapacity(Integer capacity) {
+		this.capacity = capacity;
+	}
+
+	public void setSpeed(Integer speed) {
+		this.speed = speed;
+	}
+
+	public void setPassengers(int inputPassengers) { this.passengers = inputPassengers; }
 
     public void setCapacity(int inputCapacity) { this.capacity = inputCapacity; }
 
@@ -66,8 +100,6 @@ public class Train {
     public Integer getRouteID() { return this.route; }
 
     public Integer getLocation() { return this.nextLocation; }
-
-    public Integer getPastLocation() { return this.prevLocation; }
 
     public Integer getPassengers() { return this.passengers; }
 

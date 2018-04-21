@@ -1,57 +1,111 @@
 package application.model;
 
-/**
- * Created by xan on 4/9/2018.
- */
 public class Rider {
+	private int id;
+	private String name;
+	private int currentStopId;
+	private int destinationStopId;
+	private int routeId;
 
-    //route ID (UI side: populate dropdown???)
-    private Integer targetBusRoute;
+	
+	public Rider() {
+		
+	}
+	
+	public Rider(int riderId, String riderName, int stopId, int destinationID, int routeId) {
+		this.id = riderId;
+		this.name = riderName;
+		this.currentStopId = stopId;
+		this.destinationStopId = destinationID;
+		this.routeId = routeId;
+	}
 
-    //stop ID (UI side: populate dropdown???)
-    private Integer destination;
+	/**
+	 * @return the id
+	 */
+	public int getId() {
+		return id;
+	}
 
-    public Rider() { }
+	public int getRouteId() {
+		return routeId;
+	}
 
+	public void setRouteId(int routeId) {
+		this.routeId = routeId;
+	}
 
-    public Rider(int inputRoute) {
-        this.targetBusRoute= inputRoute;
-        this.destination = -1;
-    }
+	/**
+	 * @param id
+	 * the id to set
+	 */
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    public Rider(int inputRoute, int inputDestination) {
-        this.targetBusRoute= inputRoute;
-        this.destination = inputDestination;
-    }
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
 
-    public void setTargetBusRoute(int inputRoute) { this.targetBusRoute = inputRoute; }
+	/**
+	 * @param name
+	 *            the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public void setDestination(int inputDestination) { this.destination = inputDestination; }
+	/**
+	 * @return the currentStopId
+	 */
+	public int getCurrentStopId() {
+		return currentStopId;
+	}
 
+	/**
+	 * @param currentStopId
+	 *            the currentStopId to set
+	 */
+	public void setCurrentStopId(int currentStopId) {
+		this.currentStopId = currentStopId;
+	}
 
-    public Integer getTargetBusRoute() { return this.targetBusRoute; }
+	/**
+	 * @return the destinationStopId
+	 */
+	public int getDestinationStopId() {
+		return destinationStopId;
+	}
 
-    public Integer getDestination() { return this.destination; }
+	/**
+	 * @param destinationStopId
+	 *            the destinationStopId to set
+	 */
+	public void setDestinationStopId(int destinationStopId) {
+		this.destinationStopId = destinationStopId;
+	}
 
-    /*
-    public void displayEvent() {
-        // System.out.println();
-        System.out.println("# event rank: " + Integer.toString(timeRank) + " type: " + eventType + " ID: " + Integer.toString(eventID));
-    }
-    */
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("RiderInfo [id=");
+		builder.append(id);
+		builder.append(", name=");
+		builder.append(name);
+		builder.append(", currentStopId=");
+		builder.append(currentStopId);
+		builder.append(", destinationStopId=");
+		builder.append(destinationStopId);
+		builder.append("]");
+		return builder.toString();
+	}
 
-    //Override the equals method to compare the object
-    @Override
-    public boolean equals(Object object) {
-        boolean result = false;
-        if (object == null || object.getClass() != getClass()) {
-            result = false;
-        } else {
-            Rider rider = (Rider) object;
-            if (this.targetBusRoute == rider.getTargetBusRoute() && this.destination == rider.getDestination()) {
-                result = true;
-            }
-        }
-        return result;
-    }
 }

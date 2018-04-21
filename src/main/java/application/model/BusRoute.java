@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class BusRoute {
+public class BusRoute implements Route {
     private Integer ID;
     private Integer routeNumber;
     private String routeName;
@@ -29,7 +29,6 @@ public class BusRoute {
         this.routeName = inputName;
         this.stopsOnRoute = new HashMap<Integer, Integer>();
         this.roadsOnRoute = new HashMap<Integer, List<Double>>();
-
    }
 
     public void setNumber(int inputNumber) { this.routeNumber = inputNumber; }

@@ -13,13 +13,17 @@ import org.springframework.stereotype.Repository;
 import application.model.Bus;
 import application.model.BusRoute;
 import application.model.BusStop;
-import application.model.RiderInfo;
+import application.model.BusSystem;
+import application.model.MetroSystem;
+import application.model.Rider;
 import application.model.Road;
 import application.model.RouteStopInfo;
+import application.model.SimDriver;
 import application.model.StopRoadInfo;
 import application.model.Train;
 import application.model.TrainRoute;
 import application.model.TrainStop;
+import application.model.TrainSystem;
 
 @Repository
 public class MetroDataRepository {
@@ -44,8 +48,8 @@ public class MetroDataRepository {
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				Bus bus = new Bus(rs.getInt("id"), rs.getInt("routeID"), 
-						rs.getInt("currentstop"),rs.getInt("passengers"),rs.getInt("capacity"),
-						rs.getInt("speed"),rs.getString("direction") );
+						rs.getInt("currentstop"),rs.getInt("currentstop"),rs.getInt("passengers"),rs.getInt("capacity"),
+						rs.getInt("speed"), rs.getString("direction"));
 				busList.add(bus);
 			}
 			rs.close();
@@ -73,7 +77,8 @@ public class MetroDataRepository {
 			String sql = "SELECT id, routeID, currentstop, passengers, capacity, speed, direction from train";
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
-				Train train = new Train(rs.getInt("id"), rs.getInt("routeID"),rs.getInt("currentstop"),rs.getInt("passengers"),rs.getInt("capacity"),rs.getInt("speed"),rs.getString("direction") );
+				Train train = new Train(rs.getInt("id"), rs.getInt("routeID"),rs.getInt("currentstop"),rs.getInt("currentstop"),
+						rs.getInt("passengers"),rs.getInt("capacity"),rs.getInt("speed"),rs.getString("direction") );
 				trainList.add(train);
 			}
 			rs.close();
@@ -131,7 +136,11 @@ public class MetroDataRepository {
 			String sql = "SELECT id, name, riders, x, y from trainstop";
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
-				TrainStop trainStop = new TrainStop(rs.getInt("id"), rs.getString("name"),rs.getInt("riders"), rs.getInt("x"),rs.getInt("y"));
+				TrainStop trainStop = new TrainStop(rs.getInt("id"),
+						rs.getString("name"),
+						rs.getInt("riders"), 
+						rs.getInt("x"),
+						rs.getInt("y"));
 				trainStopList.add(trainStop);
 			}
 			rs.close();
@@ -273,7 +282,6 @@ public class MetroDataRepository {
 			e.printStackTrace();
 			return null;
 		} finally {
-			conn.close();
 		}
 	}
 
@@ -291,11 +299,9 @@ public class MetroDataRepository {
 		} 
 	}
 
-	
-
-	public List<RiderInfo> getRiderInfo() {
+	public List<Rider> getRiderInfo() {
 		Statement stmt = null;
-		List<RiderInfo> riderInfos = new ArrayList<RiderInfo>();
+		List<Rider> riderInfos = new ArrayList<Rider>();
 		Connection conn = null;
 		try {
 			conn = createConnection();
@@ -307,7 +313,7 @@ public class MetroDataRepository {
 			String sql = "SELECT id, name , CURR_STOP_ID, DEST_STOP_ID FROM Rider";
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
-				RiderInfo riderInfo = new RiderInfo();
+				Rider riderInfo = new Rider();
 				// Retrieve by column name
 				riderInfo.setId(rs.getInt("id"));
 				riderInfo.setName(rs.getString("name"));
@@ -324,6 +330,256 @@ public class MetroDataRepository {
 			closeConnections(conn, stmt);
 		}
 		return riderInfos;
+	}
+	
+	// load 
+	public void loadStop(BusSystem busSystem, TrainSystem trainSystem) {
+		Statement stmt = null;
+		Connection conn = null;
+		try {
+			conn = createConnection();
+			if (conn == null) {
+				System.out.println("Connection Object to H2 DB is null.. ");
+			}
+			stmt = conn.createStatement();
+			String sql = "SELECT stopid, stopname, riders, x, y, type FROM Stop";
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+				if (rs.getInt("type") == 1)
+					busSystem.makeStop(rs.getInt("stopid"), rs.getString("stopname"), rs.getInt("riders"), rs.getDouble("x"), rs.getDouble("y"));
+				else {
+					trainSystem.makeStop(rs.getInt("stopid"), rs.getString("stopname"), rs.getInt("riders"), rs.getDouble("x"), rs.getDouble("y"));
+				}
+			}
+			rs.close();
+		} catch (SQLException se) {
+			se.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeConnections(conn, stmt);
+		}
+	}
+
+	public void loadRoute(BusSystem busSystem, TrainSystem trainSystem) {
+		Statement stmt = null;
+		Connection conn = null;
+		try {
+			conn = createConnection();
+			if (conn == null) {
+				System.out.println("Connection Object to H2 DB is null.. ");
+			}
+			stmt = conn.createStatement();
+			String sql = "SELECT RouteID, RouteNumber, RouteName, type FROM Route";
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+				if (rs.getInt("type") == 1)
+					busSystem.makeRoute(rs.getInt("RouteID"), 
+							rs.getInt("RouteNumber"), rs.getString("RouteName"));
+				else {
+					trainSystem.makeRoute(rs.getInt("RouteID"),
+							rs.getInt("RouteNumber"), rs.getString("RouteName"));
+				}
+			}
+			rs.close();
+		} catch (SQLException se) {
+			se.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeConnections(conn, stmt);
+		}
+	}
+
+	public void loadVehicle(BusSystem busSystem, TrainSystem trainSystem) {
+		Statement stmt = null;
+		Connection conn = null;
+		try {
+			conn = createConnection();
+			if (conn == null) {
+				System.out.println("Connection Object to H2 DB is null.. ");
+			}
+			stmt = conn.createStatement();
+			String sql = "SELECT VehicleID, routeID, currentstop, nextStop, passengers, "
+					+ "capacity, speed, direction, type from VEHICLE";
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+				if (rs.getInt("type") == 1)
+					busSystem.makeBus(rs.getInt("VehicleID"), rs.getInt("routeID"), 
+							rs.getInt("currentstop"),
+							rs.getInt("nextStop"),
+							rs.getInt("passengers"),rs.getInt("capacity"),
+							rs.getInt("speed"), rs.getString("direction"));
+				else {
+					trainSystem.makeTrain(rs.getInt("VehicleID"), rs.getInt("routeID"), 
+							rs.getInt("currentstop"),rs.getInt("nextStop"), 
+							rs.getInt("passengers"),rs.getInt("capacity"),
+							rs.getInt("speed"), rs.getString("direction"));
+				}
+			}
+			rs.close();
+		} catch (SQLException se) {
+			se.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeConnections(conn, stmt);
+		}
+	}
+
+	public void loadRoad(BusSystem busSystem, TrainSystem trainSystem) {
+		// TODO Auto-generated method stub
+		Statement stmt = null;
+		Connection conn = null;
+		try {
+			conn = createConnection();
+			if (conn == null) {
+				System.out.println("Connection Object to H2 DB is null.. ");
+			}
+			stmt = conn.createStatement();
+			String sql = "SELECT ROADID, ROADNAME, ROADLENGTH, SPEEDLIMIT, "
+					+ "TRAFFICSTATUS, type from ROAD";
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+				if (rs.getInt("type") == 1)
+					busSystem.makeRoad(rs.getInt("ROADID"), rs.getString("ROADNAME"),
+							rs.getFloat("ROADLENGTH"), rs.getInt("SPEEDLIMIT"),
+							rs.getInt("TRAFFICSTATUS"));
+				else {
+					trainSystem.makeRoad(rs.getInt("ROADID"), rs.getString("ROADNAME"),
+							rs.getFloat("ROADLENGTH"), rs.getInt("SPEEDLIMIT"),
+							rs.getInt("TRAFFICSTATUS"));
+				}
+			}
+			rs.close();
+		} catch (SQLException se) {
+			se.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeConnections(conn, stmt);
+		}
+	}
+
+	public void assignRiderToStops(BusSystem busSystem, TrainSystem trainSystem) {
+		// TODO Auto-generated method stub
+		Statement stmt = null;
+		Connection conn = null;
+		try {
+			conn = createConnection();
+			if (conn == null) {
+				System.out.println("Connection Object to H2 DB is null.. ");
+			}
+			stmt = conn.createStatement();
+			String sql = "SELECT RiderID, RiderNAME, CurrentStopID, DestinationStopID, "
+					+ "RouteID from Rider";
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+				int routeId = rs.getInt("RouteID");
+				int stopId = rs.getInt("CurrentStopID");
+				int riderId = rs.getInt("RiderID");
+				String riderName = rs.getString("RiderNAME");
+				int destinationID = rs.getInt("DestinationStopID");
+				if (busSystem.getRoutes().containsKey(routeId)) {
+					busSystem.getStop(stopId).
+						addNewRiders(new Rider(riderId, riderName, stopId, destinationID, routeId));
+				} else {
+					trainSystem.getStop(stopId).
+						addNewRiders(new Rider(riderId, riderName, stopId, destinationID, routeId));
+				}
+			}
+			rs.close();
+		} catch (SQLException se) {
+			se.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeConnections(conn, stmt);
+		}
+	}
+
+	public void loadEvents(SimDriver simDriver) {
+		Statement stmt = null;
+		Connection conn = null;
+		try {
+			conn = createConnection();
+			if (conn == null) {
+				System.out.println("Connection Object to H2 DB is null.. ");
+			}
+			stmt = conn.createStatement();
+			String sql = "SELECT id, rank, VEHICLEID from EVENT";
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+				int eventID = rs.getInt("id");
+				int rank = rs.getInt("rank");
+				int VEHICLEID = rs.getInt("VEHICLEID");
+				simDriver.getSimEngine().addNewEvent(eventID, rank, VEHICLEID);
+			}
+			rs.close();
+		} catch (SQLException se) {
+			se.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeConnections(conn, stmt);
+		}
+	}
+
+	public List<Integer> getStops(int routeId) {
+		Statement stmt = null;
+		Connection conn = null;
+		List<Integer> stops = new ArrayList<>();
+		try {
+			conn = createConnection();
+			if (conn == null) {
+				System.out.println("Connection Object to H2 DB is null.. ");
+			}
+			stmt = conn.createStatement();
+			String sql = "SELECT stopid from routeStop where routeID = #ROUTEID# order by sequence";
+			sql = sql.replace("#ROUTEID#", String.valueOf(routeId));
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+				stops.add(rs.getInt("stopid"));
+			}
+			rs.close();
+		} catch (SQLException se) {
+			se.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeConnections(conn, stmt);
+		}
+		return stops;
+	}
+
+	public List<Integer> getRoads(Integer routeId, Integer currentLocation, Integer nextLocation) {
+		Statement stmt = null;
+		Connection conn = null;
+		List<Integer> roads = new ArrayList<>();
+		try {
+			conn = createConnection();
+			if (conn == null) {
+				System.out.println("Connection Object to H2 DB is null.. ");
+			}
+			stmt = conn.createStatement();
+			String sql = "SELECT roadid from STOPROAD where "
+					+ "routeID = #ROUTEID# and #STOPIDFROM# and #STOPIDTO#";
+			sql = sql.replace("#ROUTEID#", String.valueOf(routeId));
+			sql = sql.replace("#STOPIDFROM#", String.valueOf(currentLocation));
+			sql = sql.replace("#STOPIDTO#", String.valueOf(nextLocation));
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+				roads.add(rs.getInt("roadid"));
+			}
+			rs.close();
+		} catch (SQLException se) {
+			se.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeConnections(conn, stmt);
+		}
+		return roads;
 	}
 
 	

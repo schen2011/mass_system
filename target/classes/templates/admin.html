@@ -10,7 +10,18 @@
 	        src="webjars/jquery/2.2.4/jquery.min.js"></script>
 </head>
 <body>
-    <div><br /><br /><br /></div>
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Metro System</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li><a href="/">Home</a></li>
+      <li><a href="/client">Client</a></li>
+      <li class="active"><a href="/admin">Admin</a></li>
+    </ul>
+  </div>
+</nav>  
 
   <div class="container-fluid text-center">
     <h1>Admin Page
@@ -18,7 +29,7 @@
       <br />
     </h1>
 	<div class="contain">
-    	<button type="button" class="btn btn-success">Start System</button>
+  	    <a href="/start" class="btn btn-success" role="button">Start System</a>
     </div>
    </div>
 </body>

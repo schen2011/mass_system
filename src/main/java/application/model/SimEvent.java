@@ -12,6 +12,14 @@ public class SimEvent {
         this.eventType = inputType;
         this.eventID = inputID;
     }
+    
+    private Integer vehicleID;
+    
+    public SimEvent(int eventID, int rank, int vehicleID) {
+    	this.eventID = eventID;
+    	this.timeRank = rank;
+    	this.vehicleID = vehicleID;
+    }
 
     public void setRank(int inputRank) { this.timeRank = inputRank; }
 
@@ -30,7 +38,39 @@ public class SimEvent {
         System.out.println("# event rank: " + Integer.toString(timeRank) + " type: " + eventType + " ID: " + Integer.toString(eventID));
     }
 
-    //Override the equals method to compare the object
+    public Integer getTimeRank() {
+		return timeRank;
+	}
+
+	public void setTimeRank(Integer timeRank) {
+		this.timeRank = timeRank;
+	}
+
+	public String getEventType() {
+		return eventType;
+	}
+
+	public void setEventType(String eventType) {
+		this.eventType = eventType;
+	}
+
+	public Integer getEventID() {
+		return eventID;
+	}
+
+	public void setEventID(Integer eventID) {
+		this.eventID = eventID;
+	}
+
+	public Integer getVehicleID() {
+		return vehicleID;
+	}
+
+	public void setVehicleID(Integer vehicleID) {
+		this.vehicleID = vehicleID;
+	}
+
+	//Override the equals method to compare the object
     @Override
     public boolean equals(Object object) {
         boolean result = false;

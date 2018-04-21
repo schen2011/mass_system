@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:dt="http://www.thymeleaf.org/dandelion/datatables">
+<head>
+    <title>Admin Page</title> 
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  	<link rel="stylesheet" type="text/css"
+          href="webjars/bootstrap/3.3.7/css/bootstrap.min.css"/>
+  	<script type="text/javascript"
+	        src="webjars/jquery/2.2.4/jquery.min.js"></script>
+</head>
+<body>
+
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Metro System</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li><a href="/">Home</a></li>
+      <li><a href="/client">Client</a></li>
+      <li class="active"><a href="/admin">Admin</a></li>
+    </ul>
+  </div>
+</nav>  
+
+<div class="container">
+  <h2>Event history</h2>
+    <table id="table" dt:table="true" class="table table-striped">
+        <thead>
+            <tr>
+                <th>VID</th>
+                <th>Current Stop</th>
+                <th>Current Rider</th>
+                <th>People Waiting</th>
+                <th>New Rider</th>
+                <th>Next Stop</th>
+                <th>How Far</th>
+                <th>How Long (milliseconds)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="entry : ${entries}">
+                <td th:text="${entry?.vehicleNumber}"></td>
+                <td th:text="${entry?.currentStop}"></td>
+                <td th:text="${entry?.currentRider}"></td>
+                <td th:text="${entry?.peopleWaiting}"></td>
+                <td th:text="${entry?.newRider}"></td>
+                <td th:text="${entry?.nextStop}"></td>
+                <td th:text="${entry?.howLong}"></td>
+                <td th:text="${entry?.howLongWillTake}"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

@@ -10,11 +10,19 @@
 	        src="webjars/jquery/2.2.4/jquery.min.js"></script>
 </head>
 <body>
-  <div>
-    <br />
-    <br />
-    <br />
+
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Metro System</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li><a href="/">Home</a></li>
+      <li class="active"><a href="/client">Client</a></li>
+      <li><a href="/admin">Admin</a></li>
+    </ul>
   </div>
+</nav>  
 
   <div class="container-fluid text-center">
     <h1>Rider Route Planner
@@ -23,19 +31,15 @@
     </h1>
 
     <div class="form-inline">
-
       <div class="input-group col-md-1">
         <label for="st">Leave from:</label>
       </div>
-
       <div class="input-group col-md-2">
         <input type="text" class="form-control" id="st" />
       </div>
-
       <div class="input-group col-md-1">
         <label for="dst">Go to:</label>
       </div>
-
       <div class="input-group col-md-2">
         <input type="text" class="form-control" id="dst" />
       </div>
@@ -49,13 +53,12 @@
       <br />
     </div>
 
-
     <div class="card text-white bg-info">
       <div class="card-header">
         <h5 class="card-title">Top Picks</h5>
       </div>
       <div class="card-body">
-        route 1:
+        <br /> route 1:
         <br /> route 2:
         <br /> route 3:
         <br />
