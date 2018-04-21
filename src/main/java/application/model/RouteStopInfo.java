@@ -1,27 +1,51 @@
 package application.model;
 
-/**
- * This class contains the details of Routes and Stop
- * @author mythili
- *
- */
 public class RouteStopInfo {
 
-	private int id;
 	private int routeId;
 	private int stopId;
+	double length; 
+	double speed;
+	double trafficstatus;
+	public double getLength() {
+		return length;
+	}
+
+	public void setLength(double length) {
+		this.length = length;
+	}
+
+	public double getSpeed() {
+		return speed;
+	}
+
+	public void setSpeed(double speed) {
+		this.speed = speed;
+	}
+
+	public double getTrafficstatus() {
+		return trafficstatus;
+	}
+
+	public void setTrafficstatus(double trafficstatus) {
+		this.trafficstatus = trafficstatus;
+	}
+
+	public RouteStopInfo(int routeId, int stopId, double length, double speed, double trafficstatus) {
+		this.routeId = routeId;
+		this.stopId = stopId;
+		this.length = length;
+		this.speed = speed;
+		this.trafficstatus = trafficstatus;
+	}
 	/**
 	 * @return the id
 	 */
-	public int getId() {
-		return id;
-	}
+	
 	/**
 	 * @param id the id to set
 	 */
-	public void setId(int id) {
-		this.id = id;
-	}
+	
 	/**
 	 * @return the routeId
 	 */
@@ -52,9 +76,7 @@ public class RouteStopInfo {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("RouteStopInfo [id=");
-		builder.append(id);
-		builder.append(", routeId=");
+		builder.append("RouteStopInfo routeId= ");
 		builder.append(routeId);
 		builder.append(", stopId=");
 		builder.append(stopId);

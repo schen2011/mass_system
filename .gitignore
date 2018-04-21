@@ -1,0 +1,4 @@
+#Ignore all class files
+target/*.*
+*.class
+*.MF

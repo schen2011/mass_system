@@ -10,34 +10,28 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import application.model.Bus;
+import application.model.BusRoute;
+import application.model.BusStop;
 import application.model.RiderInfo;
 import application.model.Road;
-import application.model.RouteInfo;
 import application.model.RouteStopInfo;
-import application.model.StopInfo;
 import application.model.StopRoadInfo;
+import application.model.Train;
+import application.model.TrainRoute;
+import application.model.TrainStop;
 
-/**
- * This class is the repository layer to retrieve information from the H2
- * Database
- * 
- * @author mythi
- *
- */
 @Repository
 public class MetroDataRepository {
 
-	// JDBC driver name and database URL
-	static final String JDBC_DRIVER = "org.h2.Driver";
-	static final String DB_URL = "jdbc:h2:mem:testdb";
-
-	// Database credentials
-	static final String USER = "sa";
-	static final String PASSWORD = "";
-
-	public List<StopInfo> getStopData() {
+	private static final String JDBC_DRIVER = "org.h2.Driver";
+	private static final String DB_URL = "jdbc:h2:file:~/metrosystem";
+	private static final String USER = "sa";
+	private static final String PASSWORD = "";
+	
+	public List<Bus> getBusData() {
 		Statement stmt = null;
-		List<StopInfo> stopInfos = new ArrayList<StopInfo>();
+		List<Bus> busList = new ArrayList<Bus>();
 		Connection conn = null;
 		try {
 			conn = createConnection();
@@ -46,41 +40,28 @@ public class MetroDataRepository {
 				return null;
 			}
 			stmt = conn.createStatement();
-			String sql = "SELECT id, name, x, y, typeId FROM Stop";
+			String sql = "SELECT id, routeID, currentstop, passengers, capacity, speed, direction from bus";
 			ResultSet rs = stmt.executeQuery(sql);
-
-			// STEP 4: Extract data from result set
-
 			while (rs.next()) {
-				StopInfo stopInfo = new StopInfo();
-				// Retrieve by column name
-				stopInfo.setStopId(rs.getInt("id"));
-				stopInfo.setName(rs.getString("name"));
-				stopInfo.setxAxis(rs.getInt("x"));
-				stopInfo.setyAxis(rs.getInt("y"));
-				stopInfo.setTypeId(rs.getInt("typeId"));
-				stopInfos.add(stopInfo);
+				Bus bus = new Bus(rs.getInt("id"), rs.getInt("routeID"), 
+						rs.getInt("currentstop"),rs.getInt("passengers"),rs.getInt("capacity"),
+						rs.getInt("speed"),rs.getString("direction") );
+				busList.add(bus);
 			}
-			// STEP 5: Clean-up environment
 			rs.close();
 		} catch (SQLException se) {
-			// Handle errors for JDBC
 			se.printStackTrace();
 		} catch (Exception e) {
-			// Handle errors for Class.forName
 			e.printStackTrace();
 		} finally {
-			// finally block used to close resources
 			closeConnections(conn, stmt);
-
 		}
-		return stopInfos;
-
+		return busList;
 	}
-
-	public List<RouteInfo> getRouteData() {
+	
+	public List<Train> getTrainData() {
 		Statement stmt = null;
-		List<RouteInfo> routeInfos = new ArrayList<RouteInfo>();
+		List<Train> trainList = new ArrayList<Train>();
 		Connection conn = null;
 		try {
 			conn = createConnection();
@@ -89,38 +70,26 @@ public class MetroDataRepository {
 				return null;
 			}
 			stmt = conn.createStatement();
-			String sql = "SELECT id, name,no,typeId FROM Route";
+			String sql = "SELECT id, routeID, currentstop, passengers, capacity, speed, direction from train";
 			ResultSet rs = stmt.executeQuery(sql);
-
-			// STEP 4: Extract data from result set
-
 			while (rs.next()) {
-				RouteInfo routeInfo = new RouteInfo();
-				// Retrieve by column name
-				routeInfo.setRouteId(rs.getInt("id"));
-				routeInfo.setRouteName(rs.getString("name"));
-				routeInfo.setNumber(rs.getString("no"));
-				routeInfo.setTypeId(rs.getInt("typeId"));
-				routeInfos.add(routeInfo);
+				Train train = new Train(rs.getInt("id"), rs.getInt("routeID"),rs.getInt("currentstop"),rs.getInt("passengers"),rs.getInt("capacity"),rs.getInt("speed"),rs.getString("direction") );
+				trainList.add(train);
 			}
-			// STEP 5: Clean-up environment
 			rs.close();
 		} catch (SQLException se) {
-			// Handle errors for JDBC
 			se.printStackTrace();
 		} catch (Exception e) {
-			// Handle errors for Class.forName
 			e.printStackTrace();
 		} finally {
 			closeConnections(conn, stmt);
-
 		}
-		return routeInfos;
+		return trainList;
 	}
-
-	public List<RouteStopInfo> getRouteStopData() {
+	
+	public List<BusStop> getBusStopData() {
 		Statement stmt = null;
-		List<RouteStopInfo> routeStopInfos = new ArrayList<RouteStopInfo>();
+		List<BusStop> busStopList = new ArrayList<BusStop>();
 		Connection conn = null;
 		try {
 			conn = createConnection();
@@ -129,55 +98,182 @@ public class MetroDataRepository {
 				return null;
 			}
 			stmt = conn.createStatement();
-			String sql = "SELECT id, routeId, stopId FROM RouteStop";
+			String sql = "SELECT id, name, riders, x, y from busstop";
 			ResultSet rs = stmt.executeQuery(sql);
-
-			// STEP 4: Extract data from result set
-
 			while (rs.next()) {
-				RouteStopInfo routeStopInfo = new RouteStopInfo();
-				// Retrieve by column name
-				routeStopInfo.setId(rs.getInt("id"));
-				routeStopInfo.setRouteId(rs.getInt("routeId"));
-				routeStopInfo.setStopId(rs.getInt("stopId"));
-				routeStopInfos.add(routeStopInfo);
+				BusStop busStop = new BusStop(rs.getInt("id"), rs.getString("name"),rs.getInt("riders"),rs.getInt("x"),rs.getInt("y"));
+				busStopList.add(busStop);
+
 			}
-			// STEP 5: Clean-up environment
 			rs.close();
 		} catch (SQLException se) {
-			// Handle errors for JDBC
 			se.printStackTrace();
 		} catch (Exception e) {
-			// Handle errors for Class.forName
 			e.printStackTrace();
 		} finally {
 			closeConnections(conn, stmt);
-
 		}
-		return routeStopInfos;
-	}
+		return busStopList;
 
-	private Connection createConnection() {
+	}
+	
+	public List<TrainStop> getTrainStopData() {
+		Statement stmt = null;
+		List<TrainStop> trainStopList = new ArrayList<TrainStop>();
 		Connection conn = null;
 		try {
-			// STEP 1: Register JDBC driver
+			conn = createConnection();
+			if (conn == null) {
+				System.out.println("Connection Object to H2 DB is null.. ");
+				return null;
+			}
+			stmt = conn.createStatement();
+			String sql = "SELECT id, name, riders, x, y from trainstop";
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+				TrainStop trainStop = new TrainStop(rs.getInt("id"), rs.getString("name"),rs.getInt("riders"), rs.getInt("x"),rs.getInt("y"));
+				trainStopList.add(trainStop);
+			}
+			rs.close();
+		} catch (SQLException se) {
+			se.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeConnections(conn, stmt);
+		}
+		return trainStopList;
+	}
+	
+	public List<BusRoute> getBusRouteData() {
+		Statement stmt = null;
+		List<BusRoute> routeList = new ArrayList<BusRoute>();
+		Connection conn = null;
+		try {
+			conn = createConnection();
+			if (conn == null) {
+				System.out.println("Connection Object to H2 DB is null.. ");
+				return null;
+			}
+			stmt = conn.createStatement();
+			String sql = "SELECT id, no, name FROM busRoute";
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+				BusRoute route = new BusRoute(rs.getInt("id"), rs.getInt("no"), rs.getString("name"));
+				routeList.add(route);
+			}
+			rs.close();
+		} catch (SQLException se) {
+			se.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeConnections(conn, stmt);
+		}
+		return routeList;
+	}
+	
+	public List<TrainRoute> getTrainRouteData() {
+		Statement stmt = null;
+		List<TrainRoute> routeList = new ArrayList<TrainRoute>();
+		Connection conn = null;
+		try {
+			conn = createConnection();
+			if (conn == null) {
+				System.out.println("Connection Object to H2 DB is null.. ");
+				return null;
+			}
+			stmt = conn.createStatement();
+			String sql = "SELECT id, no, name FROM TrainRoute";
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+				TrainRoute route = new TrainRoute(rs.getInt("id"), rs.getInt("no"), rs.getString("name"));
+				routeList.add(route);
+			}
+			rs.close();
+		} catch (SQLException se) {
+			se.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeConnections(conn, stmt);
+		}
+		return routeList;
+	}
+	
+	public List<RouteStopInfo> getBusRouteStopData() {
+		Statement stmt = null;
+		List<RouteStopInfo> busRouteStopInfos = new ArrayList<RouteStopInfo>();
+		Connection conn = null;
+		try {
+			conn = createConnection();
+			if (conn == null) {
+				System.out.println("Connection Object to H2 DB is null.. ");
+				return null;
+			}
+			stmt = conn.createStatement();
+			String sql = "SELECT name, length, speed, trafficstatus, routeid FROM BUSSTOP";
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+				RouteStopInfo routeStopInfo = new RouteStopInfo(rs.getInt("routeid"), rs.getInt("name"), rs.getInt("length"), rs.getInt("speed"), rs.getInt("trafficstatus"));
+				busRouteStopInfos.add(routeStopInfo);
+			}
+			rs.close();
+		} catch (SQLException se) {
+			se.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeConnections(conn, stmt);
+		}
+		return busRouteStopInfos;
+	}
+
+
+	public List<RouteStopInfo> getTrainRouteStopData() {
+		Statement stmt = null;
+		List<RouteStopInfo> trainRouteStopInfos = new ArrayList<RouteStopInfo>();
+		Connection conn = null;
+		try {
+			conn = createConnection();
+			if (conn == null) {
+				System.out.println("Connection Object to H2 DB is null.. ");
+				return null;
+			}
+			stmt = conn.createStatement();
+			String sql = "select name, length, speed, trafficstatus, routeid from trainstop";
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+				RouteStopInfo routeStopInfo = new RouteStopInfo(rs.getInt("routeid"), rs.getInt("name"), rs.getInt("length"), rs.getInt("speed"), rs.getInt("trafficstatus"));
+				trainRouteStopInfos.add(routeStopInfo);
+			}
+			rs.close();
+		} catch (SQLException se) {
+			se.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeConnections(conn, stmt);
+		}
+		return trainRouteStopInfos;
+	}
+	
+	private Connection createConnection() throws SQLException {
+		Connection conn = null;
+		try {
 			Class.forName(JDBC_DRIVER);
-
-			// STEP 2: Open a connection
 			System.out.println("Connecting to database...");
 			conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
 			System.out.println("Connected database successfully...");
 			return conn;
 		} catch (SQLException se) {
-			// Handle errors for JDBC
 			se.printStackTrace();
 			return null;
 		} catch (Exception e) {
-			// Handle errors for Class.forName
 			e.printStackTrace();
 			return null;
 		} finally {
-
+			conn.close();
 		}
 	}
 
@@ -188,54 +284,14 @@ public class MetroDataRepository {
 		} catch (SQLException se) {
 			se.printStackTrace();
 		}
-
 		try {
 			if (stmt != null)
 				stmt.close();
 		} catch (SQLException se2) {
-		} // nothing we can do
-
+		} 
 	}
 
-	public List<StopRoadInfo> getStopRoadData() {
-		Statement stmt = null;
-		List<StopRoadInfo> stopRoadInfos = new ArrayList<StopRoadInfo>();
-		Connection conn = null;
-		try {
-			conn = createConnection();
-			if (conn == null) {
-				System.out.println("Connection Object to H2 DB is null.. ");
-				return null;
-			}
-			stmt = conn.createStatement();
-			String sql = "SELECT id, STOPID_S,STOPID_E, roadId FROM StopRoad";
-			ResultSet rs = stmt.executeQuery(sql);
-
-			// STEP 4: Extract data from result set
-
-			while (rs.next()) {
-				StopRoadInfo stopRoadInfo = new StopRoadInfo();
-				// Retrieve by column name
-				stopRoadInfo.setId(rs.getInt("id"));
-				stopRoadInfo.setRoadId(rs.getInt("roadId"));
-				stopRoadInfo.setStopIdStart(rs.getInt("STOPID_S"));
-				stopRoadInfo.setStopIdEnd(rs.getInt("STOPID_E"));
-				stopRoadInfos.add(stopRoadInfo);
-			}
-			// STEP 5: Clean-up environment
-			rs.close();
-		} catch (SQLException se) {
-			// Handle errors for JDBC
-			se.printStackTrace();
-		} catch (Exception e) {
-			// Handle errors for Class.forName
-			e.printStackTrace();
-		} finally {
-			closeConnections(conn, stmt);
-
-		}
-		return stopRoadInfos;
-	}
+	
 
 	public List<RiderInfo> getRiderInfo() {
 		Statement stmt = null;
@@ -250,9 +306,6 @@ public class MetroDataRepository {
 			stmt = conn.createStatement();
 			String sql = "SELECT id, name , CURR_STOP_ID, DEST_STOP_ID FROM Rider";
 			ResultSet rs = stmt.executeQuery(sql);
-
-			// STEP 4: Extract data from result set
-
 			while (rs.next()) {
 				RiderInfo riderInfo = new RiderInfo();
 				// Retrieve by column name
@@ -262,59 +315,16 @@ public class MetroDataRepository {
 				riderInfo.setDestinationStopId(rs.getInt("DEST_STOP_ID"));
 				riderInfos.add(riderInfo);
 			}
-			// STEP 5: Clean-up environment
 			rs.close();
 		} catch (SQLException se) {
-			// Handle errors for JDBC
 			se.printStackTrace();
 		} catch (Exception e) {
-			// Handle errors for Class.forName
 			e.printStackTrace();
 		} finally {
 			closeConnections(conn, stmt);
-
 		}
 		return riderInfos;
 	}
 
-	public List<Road> getRoadData() {
-		Statement stmt = null;
-		List<Road> roadInfos = new ArrayList<Road>();
-		Connection conn = null;
-		try {
-			conn = createConnection();
-			if (conn == null) {
-				System.out.println("Connection Object to H2 DB is null.. ");
-				return null;
-			}
-			stmt = conn.createStatement();
-			String sql = "SELECT id, name , length, speed, TRAFFICSTATUS FROM Road";
-			ResultSet rs = stmt.executeQuery(sql);
-
-			// STEP 4: Extract data from result set
-
-			while (rs.next()) {
-				Road roadInfo = new Road();
-				// Retrieve by column name
-				roadInfo.setRoadId(rs.getInt("id"));
-				roadInfo.setRoadName(rs.getString("name"));
-				roadInfo.setRoadLength(rs.getDouble("length"));
-				roadInfo.setAverageSpeed(rs.getDouble("speed"));
-				roadInfo.setTrafficIndicator(rs.getInt("TRAFFICSTATUS"));
-				roadInfos.add(roadInfo);
-			}
-			// STEP 5: Clean-up environment
-			rs.close();
-		} catch (SQLException se) {
-			// Handle errors for JDBC
-			se.printStackTrace();
-		} catch (Exception e) {
-			// Handle errors for Class.forName
-			e.printStackTrace();
-		} finally {
-			closeConnections(conn, stmt);
-
-		}
-		return roadInfos;
-	}
+	
 }

@@ -1,7 +1,5 @@
 package application.model;
 
-import edu.gatech.TrafficIndicator;
-
 /**
  * Road class
  * 
