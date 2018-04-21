@@ -21,23 +21,13 @@ import application.model.Train;
 import application.model.TrainRoute;
 import application.model.TrainStop;
 
-/**
- * This class is the repository layer to retrieve information from the H2
- * Database
- * 
- * @author mythi
- *
- */
 @Repository
 public class MetroDataRepository {
 
-	// JDBC driver name and database URL
-	static final String JDBC_DRIVER = "org.h2.Driver";
-	static final String DB_URL = "jdbc:h2:mem:testdb";
-
-	// Database credentials
-	static final String USER = "sa";
-	static final String PASSWORD = "";
+	private static final String JDBC_DRIVER = "org.h2.Driver";
+	private static final String DB_URL = "jdbc:h2:file:~/metrosystem";
+	private static final String USER = "sa";
+	private static final String PASSWORD = "";
 	
 	public List<Bus> getBusData() {
 		Statement stmt = null;
@@ -52,30 +42,22 @@ public class MetroDataRepository {
 			stmt = conn.createStatement();
 			String sql = "SELECT id, routeID, currentstop, passengers, capacity, speed, direction from bus";
 			ResultSet rs = stmt.executeQuery(sql);
-
-			// STEP 4: Extract data from result set
 			while (rs.next()) {
-				Bus bus = new Bus(rs.getInt("id"), rs.getInt("routeID"),rs.getInt("currentstop"),rs.getInt("passengers"),rs.getInt("capacity"),rs.getInt("speed"),rs.getString("direction") );
+				Bus bus = new Bus(rs.getInt("id"), rs.getInt("routeID"), 
+						rs.getInt("currentstop"),rs.getInt("passengers"),rs.getInt("capacity"),
+						rs.getInt("speed"),rs.getString("direction") );
 				busList.add(bus);
-
 			}
-			// STEP 5: Clean-up environment
 			rs.close();
 		} catch (SQLException se) {
-			// Handle errors for JDBC
 			se.printStackTrace();
 		} catch (Exception e) {
-			// Handle errors for Class.forName
 			e.printStackTrace();
 		} finally {
-			// finally block used to close resources
 			closeConnections(conn, stmt);
-
 		}
 		return busList;
-
 	}
-	
 	
 	public List<Train> getTrainData() {
 		Statement stmt = null;
@@ -90,29 +72,21 @@ public class MetroDataRepository {
 			stmt = conn.createStatement();
 			String sql = "SELECT id, routeID, currentstop, passengers, capacity, speed, direction from train";
 			ResultSet rs = stmt.executeQuery(sql);
-
-			// STEP 4: Extract data from result set
 			while (rs.next()) {
 				Train train = new Train(rs.getInt("id"), rs.getInt("routeID"),rs.getInt("currentstop"),rs.getInt("passengers"),rs.getInt("capacity"),rs.getInt("speed"),rs.getString("direction") );
 				trainList.add(train);
-
 			}
-			// STEP 5: Clean-up environment
 			rs.close();
 		} catch (SQLException se) {
-			// Handle errors for JDBC
 			se.printStackTrace();
 		} catch (Exception e) {
-			// Handle errors for Class.forName
 			e.printStackTrace();
 		} finally {
-			// finally block used to close resources
 			closeConnections(conn, stmt);
-
 		}
 		return trainList;
-
 	}
+	
 	public List<BusStop> getBusStopData() {
 		Statement stmt = null;
 		List<BusStop> busStopList = new ArrayList<BusStop>();
@@ -126,25 +100,18 @@ public class MetroDataRepository {
 			stmt = conn.createStatement();
 			String sql = "SELECT id, name, riders, x, y from busstop";
 			ResultSet rs = stmt.executeQuery(sql);
-
-			// STEP 4: Extract data from result set
 			while (rs.next()) {
 				BusStop busStop = new BusStop(rs.getInt("id"), rs.getString("name"),rs.getInt("riders"),rs.getInt("x"),rs.getInt("y"));
 				busStopList.add(busStop);
 
 			}
-			// STEP 5: Clean-up environment
 			rs.close();
 		} catch (SQLException se) {
-			// Handle errors for JDBC
 			se.printStackTrace();
 		} catch (Exception e) {
-			// Handle errors for Class.forName
 			e.printStackTrace();
 		} finally {
-			// finally block used to close resources
 			closeConnections(conn, stmt);
-
 		}
 		return busStopList;
 
@@ -163,30 +130,21 @@ public class MetroDataRepository {
 			stmt = conn.createStatement();
 			String sql = "SELECT id, name, riders, x, y from trainstop";
 			ResultSet rs = stmt.executeQuery(sql);
-
-			// STEP 4: Extract data from result set
 			while (rs.next()) {
 				TrainStop trainStop = new TrainStop(rs.getInt("id"), rs.getString("name"),rs.getInt("riders"), rs.getInt("x"),rs.getInt("y"));
 				trainStopList.add(trainStop);
 			}
-			// STEP 5: Clean-up environment
 			rs.close();
 		} catch (SQLException se) {
-			// Handle errors for JDBC
 			se.printStackTrace();
 		} catch (Exception e) {
-			// Handle errors for Class.forName
 			e.printStackTrace();
 		} finally {
-			// finally block used to close resources
 			closeConnections(conn, stmt);
-
 		}
 		return trainStopList;
-
 	}
 	
-
 	public List<BusRoute> getBusRouteData() {
 		Statement stmt = null;
 		List<BusRoute> routeList = new ArrayList<BusRoute>();
@@ -200,24 +158,17 @@ public class MetroDataRepository {
 			stmt = conn.createStatement();
 			String sql = "SELECT id, no, name FROM busRoute";
 			ResultSet rs = stmt.executeQuery(sql);
-
-			// STEP 4: Extract data from result set
-
 			while (rs.next()) {
 				BusRoute route = new BusRoute(rs.getInt("id"), rs.getInt("no"), rs.getString("name"));
 				routeList.add(route);
 			}
-			// STEP 5: Clean-up environment
 			rs.close();
 		} catch (SQLException se) {
-			// Handle errors for JDBC
 			se.printStackTrace();
 		} catch (Exception e) {
-			// Handle errors for Class.forName
 			e.printStackTrace();
 		} finally {
 			closeConnections(conn, stmt);
-
 		}
 		return routeList;
 	}
@@ -235,29 +186,21 @@ public class MetroDataRepository {
 			stmt = conn.createStatement();
 			String sql = "SELECT id, no, name FROM TrainRoute";
 			ResultSet rs = stmt.executeQuery(sql);
-
-			// STEP 4: Extract data from result set
-
 			while (rs.next()) {
 				TrainRoute route = new TrainRoute(rs.getInt("id"), rs.getInt("no"), rs.getString("name"));
 				routeList.add(route);
 			}
-			// STEP 5: Clean-up environment
 			rs.close();
 		} catch (SQLException se) {
-			// Handle errors for JDBC
 			se.printStackTrace();
 		} catch (Exception e) {
-			// Handle errors for Class.forName
 			e.printStackTrace();
 		} finally {
 			closeConnections(conn, stmt);
-
 		}
 		return routeList;
 	}
 	
-
 	public List<RouteStopInfo> getBusRouteStopData() {
 		Statement stmt = null;
 		List<RouteStopInfo> busRouteStopInfos = new ArrayList<RouteStopInfo>();
@@ -271,24 +214,17 @@ public class MetroDataRepository {
 			stmt = conn.createStatement();
 			String sql = "SELECT name, length, speed, trafficstatus, routeid FROM BUSSTOP";
 			ResultSet rs = stmt.executeQuery(sql);
-
-			// STEP 4: Extract data from result set
-
 			while (rs.next()) {
 				RouteStopInfo routeStopInfo = new RouteStopInfo(rs.getInt("routeid"), rs.getInt("name"), rs.getInt("length"), rs.getInt("speed"), rs.getInt("trafficstatus"));
 				busRouteStopInfos.add(routeStopInfo);
 			}
-			// STEP 5: Clean-up environment
 			rs.close();
 		} catch (SQLException se) {
-			// Handle errors for JDBC
 			se.printStackTrace();
 		} catch (Exception e) {
-			// Handle errors for Class.forName
 			e.printStackTrace();
 		} finally {
 			closeConnections(conn, stmt);
-
 		}
 		return busRouteStopInfos;
 	}
@@ -307,49 +243,37 @@ public class MetroDataRepository {
 			stmt = conn.createStatement();
 			String sql = "select name, length, speed, trafficstatus, routeid from trainstop";
 			ResultSet rs = stmt.executeQuery(sql);
-
-			// STEP 4: Extract data from result set
-
 			while (rs.next()) {
 				RouteStopInfo routeStopInfo = new RouteStopInfo(rs.getInt("routeid"), rs.getInt("name"), rs.getInt("length"), rs.getInt("speed"), rs.getInt("trafficstatus"));
 				trainRouteStopInfos.add(routeStopInfo);
 			}
-			// STEP 5: Clean-up environment
 			rs.close();
 		} catch (SQLException se) {
-			// Handle errors for JDBC
 			se.printStackTrace();
 		} catch (Exception e) {
-			// Handle errors for Class.forName
 			e.printStackTrace();
 		} finally {
 			closeConnections(conn, stmt);
-
 		}
 		return trainRouteStopInfos;
 	}
 	
-	private Connection createConnection() {
+	private Connection createConnection() throws SQLException {
 		Connection conn = null;
 		try {
-			// STEP 1: Register JDBC driver
 			Class.forName(JDBC_DRIVER);
-
-			// STEP 2: Open a connection
 			System.out.println("Connecting to database...");
 			conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
 			System.out.println("Connected database successfully...");
 			return conn;
 		} catch (SQLException se) {
-			// Handle errors for JDBC
 			se.printStackTrace();
 			return null;
 		} catch (Exception e) {
-			// Handle errors for Class.forName
 			e.printStackTrace();
 			return null;
 		} finally {
-
+			conn.close();
 		}
 	}
 
@@ -360,13 +284,11 @@ public class MetroDataRepository {
 		} catch (SQLException se) {
 			se.printStackTrace();
 		}
-
 		try {
 			if (stmt != null)
 				stmt.close();
 		} catch (SQLException se2) {
-		} // nothing we can do
-
+		} 
 	}
 
 	
@@ -384,9 +306,6 @@ public class MetroDataRepository {
 			stmt = conn.createStatement();
 			String sql = "SELECT id, name , CURR_STOP_ID, DEST_STOP_ID FROM Rider";
 			ResultSet rs = stmt.executeQuery(sql);
-
-			// STEP 4: Extract data from result set
-
 			while (rs.next()) {
 				RiderInfo riderInfo = new RiderInfo();
 				// Retrieve by column name
@@ -396,17 +315,13 @@ public class MetroDataRepository {
 				riderInfo.setDestinationStopId(rs.getInt("DEST_STOP_ID"));
 				riderInfos.add(riderInfo);
 			}
-			// STEP 5: Clean-up environment
 			rs.close();
 		} catch (SQLException se) {
-			// Handle errors for JDBC
 			se.printStackTrace();
 		} catch (Exception e) {
-			// Handle errors for Class.forName
 			e.printStackTrace();
 		} finally {
 			closeConnections(conn, stmt);
-
 		}
 		return riderInfos;
 	}

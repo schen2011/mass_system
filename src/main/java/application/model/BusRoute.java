@@ -11,7 +11,6 @@ public class BusRoute {
     private HashMap<Integer, Integer> stopsOnRoute;
     private HashMap<Integer, List<Double>> roadsOnRoute;
 
-
     public BusRoute() {
         this.ID = -1;
     }

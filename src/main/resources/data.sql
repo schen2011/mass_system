@@ -1,8 +1,3 @@
-insert into admin_users(name, password) values('Mythili', 'AA');
-insert into admin_users(name, password) values('Di', 'AB');
-insert into admin_users(name, password) values('Xiaoyi', 'BA');
-insert into admin_users(name, password) values('Bo', 'BB');
-
 insert into busRoute(ID, No, Name) values(0, 10, 'Bus: UpTown');
 insert into busRoute(ID, No, Name) values(1, 16, 'Bus: DownTown');
 

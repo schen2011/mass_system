@@ -2,14 +2,8 @@ package application;
 
 import application.model.RouteStopInfo;
 import application.model.StopRoadInfo;
-import application.model.Train;
-import application.model.TrainRoute;
-import application.model.TrainSystem;
-import application.model.Bus;
-import application.model.BusRoute;
-import application.model.BusSystem;
-import application.model.Road;
 import application.repository.MetroDataRepository;
+import application.service.MetroService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import application.service.MetroService;
+import application.model.*;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -28,10 +22,7 @@ import java.util.List;
 
 @Controller
 public class MetroSystemController implements MetroSystemActions {
-
-	@Autowired
-	UserRepository userRepository;
-
+	
 	@Autowired
 	MetroService metroService;
 
@@ -39,14 +30,14 @@ public class MetroSystemController implements MetroSystemActions {
 	MetroDataRepository metroDataRepository;
 
 	@RequestMapping(path = "/metrosystem", method = RequestMethod.GET)
-	public String metrosystem(@RequestParam(name = "name", required = false, defaultValue = "World") String name,
+	public String metrosystem(@RequestParam(name = "name", required = false, 
+			defaultValue = "World") String name,
 			Model model) {
 		model.addAttribute("name", name);
 		return "metrosystem";
 	}
 
 	@RequestMapping(path = "/admin", method = RequestMethod.GET)
-	@ResponseBody
 	public String admin() {
 		try {
 			return "admin";
@@ -55,26 +46,17 @@ public class MetroSystemController implements MetroSystemActions {
 			return "error";
 		}
 	}
-
+	
 	@RequestMapping(path = "/client", method = RequestMethod.GET)
-	@ResponseBody
 	public String client() {
-
 		try {
 			return "client";
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "error";
 		}
-
 	}
-
-	@RequestMapping(path = "/fetchAdminData", method = RequestMethod.GET)
-	@ResponseBody
-	public Iterable<UserData> getAdminUsers() {
-		return userRepository.findAll();
-	}
-
+	
 	@RequestMapping(path = "/getTransitData", method = RequestMethod.GET)
 	@ResponseBody
 	public String getTransitData() {
@@ -86,8 +68,7 @@ public class MetroSystemController implements MetroSystemActions {
 			return "Exception occured when retrieving Transit Data";
 		}
 	}
-
-	// TEST
+	
 	@RequestMapping(path = "/getRoutes", method = RequestMethod.GET)
 	@ResponseBody
 	public String getAllRoutes() {
@@ -112,7 +93,6 @@ public class MetroSystemController implements MetroSystemActions {
 
 		metroService.getTransitData(martaModel, trainModel);
 		List<String> pathOptions = new ArrayList<String>();
-		// List<String> pathOptions = new ArrayList<String>();
 		HashMap<Integer, Bus> buses = martaModel.getBuses();
 		HashMap<Integer, List<Double>> busPaths = new HashMap<Integer, List<Double>>();
 		System.out.println("Take below routes from stop " + stID + " to stop " + dstID);
