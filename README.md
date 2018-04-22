@@ -46,11 +46,4 @@ The application can be deployed as a artifact. With the embedded Tomcat, you don
 - Click client to search routes
 - Click administrator to simulate and modify the system
 
-### Deploy the application.
-- The application can be deployed as a artifact. With the embedded Tomcat, you don't need to deploy the application to 
-Tomcat, instead you can just run it as a application.
-- You can package the artifact with command : mvn clean install
-- Then you can find the artifact under target folder
-- You can run java -jar artifactname.jar to launch the application.
-
 
