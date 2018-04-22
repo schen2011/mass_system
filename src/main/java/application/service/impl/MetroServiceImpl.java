@@ -135,9 +135,7 @@ public class MetroServiceImpl implements MetroService {
 			}
 			System.out.println(TrainRouteStopInfos.size() + " Train stops appended to Route");
 		}
-
-	
-
+		
 		// create the Rider
 		System.out.print(" extracting and adding the Rider: ");
 		List<Rider> riderInfos = metroDataRepository.getRiderInfo();

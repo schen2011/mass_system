@@ -119,7 +119,7 @@
   			},
     		success: function(response) {
     		 	$.each(response, function (entryIndex, entry) {
-			        options = '<li class="list-group-item">' + entry + '</li>';
+			        options += '<li class="list-group-item">' + entry + '</li>';
 			    });
 			    $("#options").html(options);
     		},
