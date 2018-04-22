@@ -5,10 +5,10 @@ This project is a mass transit simulation web app that supports bus and train sy
 
 ## Authors Group 32
 
-Di Wang (dwang383)
-Bo Chen ()
-Mythili An ()
-Xiaoyi An ()
+- Di Wang (dwang383)
+- Bo Chen (bchen354)
+- Mythili Rajaraman (mrajarman3)
+- Xiaoyi An (xan31)
 
 
 ### Prerequisites
@@ -21,24 +21,35 @@ OS - Deployed in Ubuntu VM
 
 
 #### On VM 
-Open project mass_system 
-Click run application ...
-Start browser, open [H2 console] (https://localhost8080:h2-console) import data schema and data from sql files
-Open the [UI] (https://localhost8080)
-Click client to search routes
-Click adminstrator to simulate and modify the system 
+- Open project mass_trans 
+- Click run application ...
+- Start browser, open [H2 console] (https://localhost8080:h2-console) import data schema and data from sql files
+- Open the [UI] (https://localhost:8080)
+- Click client to search routes
+- Click adminstrator to simulate and modify the system 
 
 #### Running a new machine
-Open eclipse - Spring tools plugin recommended to install
-Import Project as Existing Maven Project and select source code (mass_system) 
-Configure run application as new Spring Boot App, set main class as application.Application
-Run application ...
-Start browser, open [H2 console] (https://localhost8080:h2-console) import data schema and data from sql files
-Open the [UI] (https://localhost8080)
+- Open eclipse - Spring tools plugin recommended to install
+- Import Project as Existing Maven Project and select source code (mass_system) 
+- Configure run application as new Spring Boot App, set main class as application.Application
+- Run application ...
+- Start browser, open [H2 console] (https://localhost8080:h2-console) import data schema and data from sql files
+Open the [UI] (https://localhost:8080)
 Click client to search routes
 Click adminstrator to simulate and modify the system 
 
-For ease of use, we package the file into jar file
+### Deploy the application.
+The application can be deployed as a artifact. With the embedded Tomcat, you don't need to deploy the application to Tomcat, instead you can just run it as a application.
+- You can package the artifact with command : mvn clean install
+- Then you can find the artifact under target folder
+- You can run java -jar artifactname.jar to launch the application.
+- Start browser, open [H2 console] (https://localhost8080:h2-console) import data schema and data from sql files<br>
+- Open the [UI] (https://localhost:8080)<br>
+- Click client to search routes<br>
+- Click administrator to simulate and modify the system
+
+ 
+
 
 
 
