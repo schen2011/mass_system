@@ -1,5 +1,8 @@
 package application.model;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class Rider {
 	private int id;
 	private String name;

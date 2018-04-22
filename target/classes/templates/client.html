@@ -1,13 +1,14 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head> 
-    <title>Client Page</title> 
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-  	<link rel="stylesheet" type="text/css"
-          href="webjars/bootstrap/3.3.7/css/bootstrap.min.css"/>
-  	<script type="text/javascript"
-	        src="webjars/jquery/2.2.4/jquery.min.js"></script>
+<head>
+  <title>Client Page</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" type="text/css"
+        href="webjars/bootstrap/3.3.7/css/bootstrap.min.css"/>
+  <script type="text/javascript"
+          src="webjars/jquery/2.2.4/jquery.min.js">
+  </script>
 </head>
 <body>
 
@@ -24,57 +25,112 @@
   </div>
 </nav>  
 
-  <div class="container-fluid text-center">
-    <h1>Rider Route Planner
-      <br />
-      <br />
-    </h1>
+<div class="container-fluid text-center">
+  <h1>Rider Route Planner
+    <br />
+    <br />
+  </h1>
 
-    <div class="form-inline">
-      <div class="input-group col-md-1">
-        <label for="st">Leave from:</label>
-      </div>
-      <div class="input-group col-md-2">
-        <input type="text" class="form-control" id="st" />
-      </div>
-      <div class="input-group col-md-1">
-        <label for="dst">Go to:</label>
-      </div>
-      <div class="input-group col-md-2">
-        <input type="text" class="form-control" id="dst" />
-      </div>
-      <div class="input-group col-md-2">
-        <button type="button" class="btn btn-info">Search Routes</button>
-      </div>
+  <div class="form-inline">
+
+    <div class="input-group col-md-1">
+      <label for="st">Leave from:</label>
     </div>
 
-    <div>
-      <br />
-      <br />
+    <div class="input-group col-md-2">
+      <select class="form-control" id="st">
+        <option value="0">Appleville</option>
+        <option value="1">Banana city</option>
+        <option value="2">Star City</option>
+        <option value="3">Cherry City</option>
+        <option value="4">West Side</option>
+        <option value="5">South Side</option>
+        <option value="6">East Side</option>
+        <option value="7">Central City</option>
+      </select>
     </div>
 
-    <div class="card text-white bg-info">
-      <div class="card-header">
-        <h5 class="card-title">Top Picks</h5>
-      </div>
-      <div class="card-body">
-        <br /> route 1:
-        <br /> route 2:
-        <br /> route 3:
-        <br />
-      </div>
-    </div>
-    <div>
-      <br />
-      <br />
-    </div>
-    
-    <div class="card text-white bg-success">
-      <div class="card-header">
-        <h5 class="card-title">Real-Time System</h5>
-      </div>
+    <div class="input-group col-md-1">
+      <label for="dst">Go to:</label>
     </div>
 
+    <div class="input-group col-md-2">
+      <select class="form-control" id="dst">
+        <option value="0">Appleville</option>
+        <option value="1">Banana city</option>
+        <option value="2">Star City</option>
+        <option value="3">Cherry City</option>
+        <option value="4">West Side</option>
+        <option value="5">South Side</option>
+        <option value="6">East Side</option>
+        <option value="7">Central City</option>
+      </select>
+    </div>
+    <div class="input-group col-md-2">
+      <button id="searchRoute" type="button" class="btn btn-info">Search Routes</button>
+    </div>
   </div>
+
+  <div>
+    <br />
+    <br />
+  </div>
+
+
+  <div class="card text-white bg-info">
+    <div class="card-header">
+      <h5 class="card-title">Top Picks</h5>
+    </div>
+    <div class="card-body panel panel-default">
+      <ul id="options" class="panel-body"></ul>
+    </div>
+  </div>
+  <div>
+    <br />
+    <br />
+  </div>
+
+  <div class="card text-white bg-success">
+    <div class="card-header">
+      <h5 class="card-title">Real-Time System</h5>
+    </div>
+  </div>
+
+</div>
+<script>
+	$("#searchRoute").click(function() {
+  		var startId = parseInt($('#st').val());
+    	var endId = parseInt($('#dst').val());
+    	var options="";
+
+    	$("#options").html("");
+
+    	if(startId == endId)
+    	{
+    		alert("please check: destination is the same as current stop!");
+    		$("#options").html("");
+    	}
+    	else{
+    		$.ajax({
+   		 	url: '/getAllRoutes',
+   		 	data: {
+    		startStopID: startId,
+    		destinationStopID: endId
+  			},
+    		success: function(response) {
+    		 	$.each(response, function (entryIndex, entry) {
+			        options = '<li class="list-group-item">' + entry + '</li>';
+			    });
+			    $("#options").html(options);
+    		},
+    		error: function(xhr) {
+        		alert("error");
+    		}
+			});
+    	}
+	});
+</script>
+
 </body>
 </html>
+

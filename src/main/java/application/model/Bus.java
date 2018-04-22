@@ -3,6 +3,9 @@ package application.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class Bus {
 	private Integer ID;
 	private Integer route;

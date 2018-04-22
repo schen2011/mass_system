@@ -2,10 +2,8 @@ package application.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.PriorityQueue;
-import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,15 +12,12 @@ import application.model.Bus;
 import application.model.BusRoute;
 import application.model.BusStop;
 import application.model.BusSystem;
-import application.model.MetroSystem;
 import application.model.MovingHistory;
 import application.model.Rider;
 import application.model.Road;
 import application.model.RouteStopInfo;
 import application.model.SimDriver;
 import application.model.SimEvent;
-import application.model.SimQueue;
-import application.model.StopRoadInfo;
 import application.model.TrafficIndicator;
 import application.model.Train;
 import application.model.TrainRoute;

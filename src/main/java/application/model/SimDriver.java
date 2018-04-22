@@ -1,12 +1,8 @@
 package application.model;
 
-import java.util.Scanner;
-import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-import java.sql.*;
-import java.util.Properties;
+import java.util.Scanner;
 
 public class SimDriver {
     private SimQueue simEngine;

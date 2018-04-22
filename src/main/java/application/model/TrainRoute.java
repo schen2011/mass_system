@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class TrainRoute implements Route {
     private Integer ID;
     private Integer routeNumber;

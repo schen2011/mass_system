@@ -1,11 +1,15 @@
 package application.model;
 
 import java.util.Random;
+
+import org.springframework.stereotype.Component;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 
+@Component
 public class BusStop implements Stop {
     private Integer ID;
     private String stopName;
