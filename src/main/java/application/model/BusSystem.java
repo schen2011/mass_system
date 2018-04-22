@@ -83,7 +83,6 @@ public class BusSystem implements MetroSystem {
     	int riderWaiting = currentStop.getWaitingQueue().get(bus.getRouteID()).size();
     	currentStop.exchangeRiders(bus);
     	int afterExchange = bus.getRiderList().size();
-    	//load rider first
     	int nextStop = bus.getNextLocation();
     	bus.setCurrentLocation(bus.getNextLocation());
     	return saveMovingHistory(currentStop, currentRider, riderWaiting, afterExchange, nextStop);

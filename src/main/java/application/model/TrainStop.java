@@ -17,10 +17,7 @@ public class TrainStop implements Stop {
     private Integer waiting;
     private HashMap<Integer, Queue<Rider>> waitingQueue;
 
-
-    public TrainStop() {
-        this.ID = -1;
-    }
+    public TrainStop() {}
 
     public TrainStop(int uniqueValue) {
         this.ID = uniqueValue;
@@ -45,23 +42,9 @@ public class TrainStop implements Stop {
         this.waiting = inputRiders;
         this.waitingQueue = new HashMap<>();
    }
-/*
-    public TrainStop(int uniqueValue, String inputName, int inputRiders, double inputXCoord, double inputYCoord, double length, double trafficstatus, int routeID) {
-        this.ID = uniqueValue;
-        this.stopName = inputName;
-        this.xCoord = inputXCoord;
-        this.yCoord = inputYCoord;
-        randGenerator = new Random();
-        rateCatchingTrain = new HashMap<Integer, int[]>();
-        rateLeavingTrain = new HashMap<Integer, int[]>();
-        this.waiting = inputRiders;
-        this.setLength(length);
-        this.setTrafficstatus(trafficstatus);
-        this.setRouteID(routeID);
-   }
     
-  */ 
     public void setID(int ID) { this.ID = ID; }
+    
     public void setName(String inputName) { this.stopName = inputName; }
 
     public void setRiders(int inputRiders) { this.waiting = inputRiders; }
@@ -89,11 +72,10 @@ public class TrainStop implements Stop {
     }
 
     public Double findDistance(TrainStop destination) {
-        // coordinates are measure in abstract units and conversion factor translates to statute miles
         final double distanceConversion = 70.0;
         return distanceConversion * Math.sqrt(Math.pow((this.xCoord - destination.getXCoord()), 2) + Math.pow((this.yCoord - destination.getYCoord()), 2));
     }
-
+   
     public Integer exchangeRiders(int rank, int initialPassengerCount, int capacity) {
         int hourOfTheDay = (rank / 60) % 24;
         int ableToBoard;
@@ -134,8 +116,8 @@ public class TrainStop implements Stop {
     public void exchangeRiders(Train train) {
     	Iterator<Rider> riders = train.getRiderList().iterator();
     	while (riders.hasNext()) {
-    		Rider r = riders.next();
-    		if (r != null && r.getDestinationStopId() == this.ID) {
+    		Rider rider = riders.next();
+    		if (rider != null && rider.getDestinationStopId() == this.ID) {
     			riders.remove();
     		}
     	}
@@ -146,7 +128,6 @@ public class TrainStop implements Stop {
     		spaceLeft--;
     	}
     }
-    
     
     public String getStopName() {
 		return stopName;
@@ -237,7 +218,6 @@ public class TrainStop implements Stop {
         return (lowerRange + upperRange) /2;
     }
 
-    //Override the equals method to compare the object
     @Override
     public boolean equals(Object object) {
         boolean result = false;
@@ -251,7 +231,4 @@ public class TrainStop implements Stop {
         }
         return result;
     }
-
-	
-
 }

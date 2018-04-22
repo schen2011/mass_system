@@ -14,12 +14,9 @@ import application.model.Bus;
 import application.model.BusRoute;
 import application.model.BusStop;
 import application.model.BusSystem;
-import application.model.MetroSystem;
 import application.model.Rider;
-import application.model.Road;
 import application.model.RouteStopInfo;
 import application.model.SimDriver;
-import application.model.StopRoadInfo;
 import application.model.Train;
 import application.model.TrainRoute;
 import application.model.TrainStop;
@@ -310,15 +307,15 @@ public class MetroDataRepository {
 				return null;
 			}
 			stmt = conn.createStatement();
-			String sql = "SELECT id, name , CURR_STOP_ID, DEST_STOP_ID FROM Rider";
+			String sql = "SELECT RiderID, RiderNAME , CurrentStopID, DestinationStopID FROM Rider";
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				Rider riderInfo = new Rider();
 				// Retrieve by column name
-				riderInfo.setId(rs.getInt("id"));
-				riderInfo.setName(rs.getString("name"));
-				riderInfo.setCurrentStopId(rs.getInt("CURR_STOP_ID"));
-				riderInfo.setDestinationStopId(rs.getInt("DEST_STOP_ID"));
+				riderInfo.setId(rs.getInt("RiderID"));
+				riderInfo.setName(rs.getString("RiderNAME"));
+				riderInfo.setCurrentStopId(rs.getInt("CurrentStopID"));
+				riderInfo.setDestinationStopId(rs.getInt("DestinationStopID"));
 				riderInfos.add(riderInfo);
 			}
 			rs.close();

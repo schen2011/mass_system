@@ -10,18 +10,9 @@ import application.model.MovingHistory;
 import application.model.SimDriver;
 import application.model.TrainSystem;
 
-/**
- * This class contains the functionality for the metro transit system
- * @author mythili
- *
- */
 @Service
 public interface MetroService {
-
-	/**
-	 * This method retrieves all the Transit Data
-	 * @throws Exception
-	 */
+	
 	public List<MovingHistory> start() throws Exception;
 	
 	public void getTransitData() throws Exception;
@@ -29,7 +20,7 @@ public interface MetroService {
 	public void getTransitData(BusSystem martaModel, TrainSystem trainModel) throws Exception;
 
 	public void loadStop(BusSystem busSystem, TrainSystem trainSystem) throws Exception;
-	//public void loadStop() throws Exception;
+
 	public void loadRoute(BusSystem busSystem, TrainSystem trainSystem) throws Exception;
 
 	public void loadVehicle(BusSystem busSystem, TrainSystem trainSystem);

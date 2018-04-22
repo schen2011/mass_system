@@ -250,7 +250,6 @@ public class MetroServiceImpl implements MetroService {
 			// how long will take to get there.
 			List<Integer> roadIdList = getRoads(bus.getRouteID(), 
 					bus.getCurrentLocation(), bus.getNextLocation());
-			
 			double totalLength = 0;
 			double totalTime = 0;
 			for (Integer roadId : roadIdList) {
@@ -259,7 +258,6 @@ public class MetroServiceImpl implements MetroService {
 						/ covnertTraffic(road.getTrafficIndicator()) * 60;  
 				totalLength += road.getRoadLength();
 			}
-			
 			operationRst = busSystem.moveBus(busSystem.getBus(vehicleID));
 			operationRst.setBus(true);
 			operationRst.setVehicleNumber("Bus - " + String.valueOf(vehicleID));

@@ -21,9 +21,6 @@ import java.util.PriorityQueue;
 
 @Controller
 public class MetroSystemController implements MetroSystemActions {
-	
-	private boolean start = false;
-	
 	@Autowired
 	MetroService metroService;
 
@@ -31,15 +28,7 @@ public class MetroSystemController implements MetroSystemActions {
 	MetroDataRepository metroDataRepository;
 	
 	private List<MovingHistory> movingHistories;
-
-	@RequestMapping(path = "/metrosystem", method = RequestMethod.GET)
-	public String metrosystem(@RequestParam(name = "name", required = false, 
-			defaultValue = "World") String name,
-			Model model) {
-		model.addAttribute("name", name);
-		return "metrosystem";
-	}
-
+	
 	@RequestMapping(path = "/admin", method = RequestMethod.GET)
 	public String admin() {
 		try {
@@ -72,16 +61,16 @@ public class MetroSystemController implements MetroSystemActions {
 		}
 	}
 	
-	@RequestMapping(path = "/getRoutes", method = RequestMethod.GET)
-	@ResponseBody
-	public String getAllRoutes() {
-		try {
-			return "option: route 1; total distance: 10 miles; travel time: 30 minutes";
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "Error";
-		}
-	}
+//	@RequestMapping(path = "/getRoutes", method = RequestMethod.GET)
+//	@ResponseBody
+//	public String getAllRoutes() {
+//		try {
+//			return "option: route 1; total distance: 10 miles; travel time: 30 minutes";
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			return "Error";
+//		}
+//	}
 	
 	@RequestMapping(path = "/start") 
 	public String startApplication(Model model) throws Exception {
@@ -99,13 +88,6 @@ public class MetroSystemController implements MetroSystemActions {
 		System.out.println(lst);
 		return;
 	}
-	    
-    @RequestMapping("/test")
-    public String test(Model model){
-    	model.addAttribute("entries", metroService.listAllTest());
-        return "test";
-    }
-    
 	
 	@RequestMapping(path = "/getAllRoutes", method = RequestMethod.GET)
 	@ResponseBody
@@ -117,28 +99,22 @@ public class MetroSystemController implements MetroSystemActions {
 		TrainSystem trainModel = new TrainSystem();
 		martaModel.displayModel();
 		trainModel.displayModel();
-
 		metroService.getTransitData(martaModel, trainModel);
 		List<String> pathOptions = new ArrayList<String>();
 		HashMap<Integer, Bus> buses = martaModel.getBuses();
 		HashMap<Integer, List<Double>> busPaths = new HashMap<Integer, List<Double>>();
-		System.out.println("Take below routes from stop " + stID + " to stop " + dstID);
 		for (BusRoute route : martaModel.getRoutes().values()) {
 			double busID = -1;
 			double arrivalTime = Double.MAX_VALUE;
 			if (route.hasStop(stID) && route.hasStop(dstID)) {
-				System.out.println("Route: " + route.getID());
 				int stStopRank = route.getStopRank(stID);
 				int dstStopRank = route.getStopRank(dstID);
 				List<Double> busPath = route.calculateRoute(stStopRank, dstStopRank);
 				for (Bus bus : buses.values()) {
-					//System.out.println("Bus direction"+bus.getDirection());
 					bus.displayInternalStatus();
 					if (bus.getRouteID() == route.getID()) {
 						int currStopRank = route.getStopRank(bus.getCurrentLocation());
-						// inbound - departing
-						if (bus.getDirection() == "INBOUND") {
-							// in your direction
+						if (bus.getDirection().equals("INBOUND")) {
 							if (dstStopRank >= stStopRank) {
 								if (currStopRank <= stStopRank) {
 									double time = route.calculateRoute(currStopRank, stStopRank).get(1);
@@ -155,7 +131,6 @@ public class MetroSystemController implements MetroSystemActions {
 									}
 								}
 							}
-							// opposition to your direction
 							else {
 								double time = route.calculateRoute(currStopRank, route.getLength() - 2).get(1)
 										+ route.calculateRoute(stStopRank, route.getLength() - 2).get(1);
@@ -165,9 +140,7 @@ public class MetroSystemController implements MetroSystemActions {
 								}
 							}
 						}
-						// outbound - returning
 						else {
-							// in your direction
 							if (dstStopRank < stStopRank) {
 								if (currStopRank >= dstStopRank) {
 									double time = route.calculateRoute(dstStopRank, stStopRank).get(1);
@@ -184,7 +157,6 @@ public class MetroSystemController implements MetroSystemActions {
 									}
 								}
 							}
-							// opposition to your direction
 							else {
 								double time = route.calculateRoute(0, currStopRank).get(1)
 										+ route.calculateRoute(0, stStopRank).get(1);
@@ -206,23 +178,21 @@ public class MetroSystemController implements MetroSystemActions {
 		}
 
 		for (Integer routeID : busPaths.keySet()) {
-			// "Option: take Bus Route: " + routeInfo.getRouteId() + "; total length: " +
-			// travelLength + "miles; total travel time: " + travelTime + "hours;"
-			pathOptions.add("Option: take Bus Route: " + routeID + "; total distance: " + busPaths.get(routeID).get(0)
-					+ "miles; total travel time: " + busPaths.get(routeID).get(1) + " hours; total stops : "
-					+ busPaths.get(routeID).get(2) + " next Bus No: " + busPaths.get(routeID).get(4) + "; Arriving in : "
+			pathOptions.add("Option: take Bus Route: " + routeID 
+					+ "; total distance: " + busPaths.get(routeID).get(0)
+					+ "miles; total travel time: " + busPaths.get(routeID).get(1) 
+					+ " hours; total stops : "
+					+ busPaths.get(routeID).get(2) + " next Bus No: " 
+					+ busPaths.get(routeID).get(4) + "; Arriving in : "
 					+ busPaths.get(routeID).get(3) + " hours;");
 		}
-
+		
 		HashMap<Integer, Train> trains = trainModel.getTrains();
 		HashMap<Integer, List<Double>> trainPaths = new HashMap<Integer, List<Double>>();
-
-		System.out.println("Take below routes from stop " + stID + " to stop " + dstID);
 		for (TrainRoute route : trainModel.getRoutes().values()) {
 			double trainID = -1;
 			double arrivalTime = Double.MAX_VALUE;
 			if (route.hasStop(stID) && route.hasStop(dstID)) {
-				System.out.println("Route: " + route.getID());
 				int stStopRank = route.getStopRank(stID);
 				int dstStopRank = route.getStopRank(dstID);
 				List<Double> trainPath = route.calculateRoute(stStopRank, dstStopRank);
@@ -231,9 +201,7 @@ public class MetroSystemController implements MetroSystemActions {
 					train.displayInternalStatus();
 					if (train.getRoute() == route.getID()) {
 						int currStopRank = route.getStopRank(train.getCurrentLocation());
-						// inbound - departing
-						if (train.getDirection() == "INBOUND") {
-							// in your direction
+						if (train.getDirection().equals("INBOUND")) {
 							if (dstStopRank >= stStopRank) {
 								if (currStopRank <= stStopRank) {
 									double time = route.calculateRoute(currStopRank, stStopRank).get(1);
@@ -250,7 +218,6 @@ public class MetroSystemController implements MetroSystemActions {
 									}
 								}
 							}
-							// opposition to your direction
 							else {
 								double time = route.calculateRoute(currStopRank, route.getLength() - 2).get(1)
 										+ route.calculateRoute(stStopRank, route.getLength() - 2).get(1);
@@ -260,9 +227,7 @@ public class MetroSystemController implements MetroSystemActions {
 								}
 							}
 						}
-						// outbound - returning
 						else {
-							// in your direction
 							if (dstStopRank < stStopRank) {
 								if (currStopRank >= dstStopRank) {
 									double time = route.calculateRoute(dstStopRank, stStopRank).get(1);
@@ -271,7 +236,8 @@ public class MetroSystemController implements MetroSystemActions {
 										trainID = train.getID();
 									}
 								} else {
-									double time = 2 * route.calculateRoute(0, route.getLength() - 2).get(1)
+									double time = 
+											2 * route.calculateRoute(0, route.getLength() - 2).get(1)
 											- route.calculateRoute(currStopRank, stStopRank).get(1);
 									if (time < arrivalTime) {
 										arrivalTime = time;
@@ -279,7 +245,6 @@ public class MetroSystemController implements MetroSystemActions {
 									}
 								}
 							}
-							// opposition to your direction
 							else {
 								double time = route.calculateRoute(0, currStopRank).get(1)
 										+ route.calculateRoute(0, stStopRank).get(1);
@@ -301,14 +266,14 @@ public class MetroSystemController implements MetroSystemActions {
 		}
 		
 		for (Integer routeID : trainPaths.keySet()) {
-			// "Option: take Train Route: " + routeInfo.getRouteId() + "; total length: " +
-			// travelLength + "miles; total travel time: " + travelTime + "hours;"
 			pathOptions.add("Option: take Train Route: " + routeID + "; total distance: "
-					+ trainPaths.get(routeID).get(0) + " miles; total travel time: " + trainPaths.get(routeID).get(1)
-					+ " hours; total stops : " + trainPaths.get(routeID).get(2) + " hours; next Train No: "
-					+ trainPaths.get(routeID).get(3) + "; Arriving in : " + trainPaths.get(routeID).get(4) + " hours;");
+					+ trainPaths.get(routeID).get(0) + " miles; total travel time: " 
+					+ trainPaths.get(routeID).get(1)
+					+ " hours; total stops : " + trainPaths.get(routeID).get(2) 
+					+ " hours; next Train No: "
+					+ trainPaths.get(routeID).get(3) + "; Arriving in : " 
+					+ trainPaths.get(routeID).get(4) + " hours;");
 		}
-
 		return pathOptions;
 	}
 
@@ -317,7 +282,6 @@ public class MetroSystemController implements MetroSystemActions {
 		SimDriver sys = new SimDriver();
 		BusSystem busSystem = sys.getBusModel();
 		TrainSystem trainSystem = sys.getTrainModel();
-		
 		// load stop
 		metroService.loadStop(busSystem, trainSystem);
 		// load route
@@ -366,15 +330,11 @@ public class MetroSystemController implements MetroSystemActions {
 			operationRst.setHowLongWillTake(totalTime);
 			operationRst.setHowLong(totalLength);
 			
-			// GetNextStop -> 
-			// stop ID
 			List<Integer> lst = getStops(bus.getRouteID()); 
-			// use the routeid, get all stopid, with sequence, if inbound, small to larger, else larger to small
 			int firstStop = 0, lastStop = lst.size() - 1;
 			int getIndex = getIndex(lst, bus.getCurrentLocation());
 			if (bus.getDirection().toUpperCase().equals("INBOUND")) {
 				if (getIndex == lastStop) {
-					//change to outbound;
 					bus.setDirection("OUTBOUND");
 					bus.setNextLocation(lst.get(getIndex - 1));
 				} else {
@@ -382,7 +342,6 @@ public class MetroSystemController implements MetroSystemActions {
 				}
 			} else {
 				if (getIndex == firstStop) {
-					//change to inbound;
 					bus.setDirection("INBOUND");
 					bus.setNextLocation(lst.get(getIndex + 1));
 				} else {
@@ -407,9 +366,7 @@ public class MetroSystemController implements MetroSystemActions {
 				totalLength += road.getRoadLength();
 			}
 			
-			System.out.println("what is the vehicleID =" + vehicleID);
 			operationRst = trainSystem.moveTrain(trainSystem.getTrain(vehicleID));
-			
 			operationRst.setHowLongWillTake(totalTime);
 			operationRst.setHowLong(totalLength);
 			
@@ -418,7 +375,6 @@ public class MetroSystemController implements MetroSystemActions {
 			int getIndex = getIndex(lst, train.getCurrentLocation());
 			if (train.getDirection().toUpperCase().equals("INBOUND")) {
 				if (getIndex == lastStop) {
-					//change to outbound;
 					train.setDirection("OUTBOUND");
 					train.setNextLocation(lst.get(getIndex - 1));
 				} else {
@@ -426,7 +382,6 @@ public class MetroSystemController implements MetroSystemActions {
 				}
 			} else {
 				if (getIndex == firstStop) {
-					//change to inbound;
 					train.setDirection("INBOUND");
 					train.setNextLocation(lst.get(getIndex + 1));
 				} else {
@@ -435,13 +390,14 @@ public class MetroSystemController implements MetroSystemActions {
 			}
 			nextStop = train.getNextLocation();
 		}
+		
 		return operationRst;
 	}
 
 	
 	private double covnertTraffic(String trafficIndicator) {
 		if (trafficIndicator.equals(TrafficIndicator.TRAFFIC_LIGHT)) {
-			return 0.8;
+			return 0.8; //80% of the normal speed
 		} else if (trafficIndicator.equals(TrafficIndicator.TRAFFIC_MEDIUM)) {
 			return 0.6;
 		} else if (trafficIndicator.equals(TrafficIndicator.TRAFFIC_PEAK)) {
@@ -451,7 +407,8 @@ public class MetroSystemController implements MetroSystemActions {
 		}
 	}
 
-	private List<Integer> getRoads(Integer routeId, Integer currentLocation, Integer nextLocation) {
+	private List<Integer> getRoads(Integer routeId, 
+			Integer currentLocation, Integer nextLocation) {
 		return metroService.getRoads(routeId, currentLocation, nextLocation);
 	}
 

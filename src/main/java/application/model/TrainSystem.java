@@ -37,7 +37,6 @@ public class TrainSystem implements MetroSystem {
     }
 
     public int makeStop(int uniqueID, String inputName, int inputRiders, double inputXCoord, double inputYCoord) {
-        // int uniqueID = stops.size();
         stops.put(uniqueID, new TrainStop(uniqueID, inputName, inputRiders, inputXCoord, inputYCoord));
         return uniqueID;
     }
@@ -51,13 +50,11 @@ public class TrainSystem implements MetroSystem {
     public void appendRoadToRoute(int routeID, double length, double speed, double trafficstatus) { routes.get(routeID).addNewRoad(length, speed, trafficstatus); }
 
     public int makeRoute(int uniqueID, int inputNumber, String inputName) {
-        // int uniqueID = routes.size();
         routes.put(uniqueID, new TrainRoute(uniqueID, inputNumber, inputName));
         return uniqueID;
     }
 
     public int makeTrain(int uniqueID, int inputRoute, int inputLocation, int inputLocation2, int inputPassengers, int inputCapacity, int inputSpeed, String direction) {
-        // int uniqueID = trains.size();
         trains.put(uniqueID, new Train(uniqueID, inputRoute, 
         		inputLocation, inputLocation2, inputPassengers, inputCapacity, inputSpeed, direction));
         return uniqueID;
@@ -76,7 +73,6 @@ public class TrainSystem implements MetroSystem {
     }
     
     public MovingHistory moveTrain(Train train) {
-    	System.out.println("what is the current location" + train.getCurrentLocation());
     	TrainStop currentStop = stops.get(train.getCurrentLocation());
     	if (train.getRiderList().isEmpty()) {
     		train.setRiderList(new ArrayList<>());

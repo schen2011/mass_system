@@ -44,22 +44,7 @@ public class BusStop implements Stop {
         this.waiting = inputRiders;
         this.waitingQueue = new HashMap<>();
     }
-   
-    /*
-    public BusStop(int uniqueValue, String inputName, int inputRiders, double inputXCoord, double inputYCoord, double length, double trafficstatus, int routeID) {
-        this.ID = uniqueValue;
-        this.stopName = inputName;
-        this.xCoord = inputXCoord;
-        this.yCoord = inputYCoord;
-        randGenerator = new Random();
-        rateCatchingBus = new HashMap<Integer, int[]>();
-        rateLeavingBus = new HashMap<Integer, int[]>();
-        this.waiting = inputRiders;
-        this.setLength(length);
-        this.setTrafficstatus(trafficstatus);
-        this.setRouteID(routeID);
-   }*/
-
+ 
     public void displayEvent() {
         System.out.println(" bus stop: " + Integer.toString(this.ID));
     }

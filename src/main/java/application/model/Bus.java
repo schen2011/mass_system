@@ -2,7 +2,6 @@ package application.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
 
 public class Bus {
 	private Integer ID;
@@ -143,7 +142,6 @@ public class Bus {
 		passengers = passengers + differential;
 	}
 
-	// Override the equals method to compare the object
 	@Override
 	public boolean equals(Object object) {
 		boolean result = false;
