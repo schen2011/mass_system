@@ -10,15 +10,13 @@ This project is a mass transit simulation web app that supports bus and train sy
 - Mythili Rajaraman (mrajarman3)
 - Xiaoyi An (xan31)
 
-
 ### Prerequisites
 
-IDE - Eclipse (Spring tools plugin)
+IDE - Eclipse, IntelliJ (Spring tools plug-in), STS
 Browser - Chrome, Firefox etc.
 OS - Deployed in Ubuntu VM
 
 ### Running the test
-
 
 #### On VM 
 - Open project mass_trans 
@@ -34,22 +32,25 @@ OS - Deployed in Ubuntu VM
 - Configure run application as new Spring Boot App, set main class as application.Application
 - Run application ...
 - Start browser, open [H2 console] (https://localhost8080:h2-console) import data schema and data from sql files
-Open the [UI] (https://localhost:8080)
-Click client to search routes
-Click adminstrator to simulate and modify the system 
+- Open the [UI] (https://localhost:8080)
+- Click Client to search routes
+- Click Administrator to simulate and modify the system 
 
 ### Deploy the application.
 The application can be deployed as a artifact. With the embedded Tomcat, you don't need to deploy the application to Tomcat, instead you can just run it as a application.
 - You can package the artifact with command : mvn clean install
 - Then you can find the artifact under target folder
 - You can run java -jar artifactname.jar to launch the application.
-- Start browser, open [H2 console] (https://localhost8080:h2-console) import data schema and data from sql files<br>
-- Open the [UI] (https://localhost:8080)<br>
-- Click client to search routes<br>
+- Start browser, open [H2 console] (https://localhost8080:h2-console) import data schema and data from sql files
+- Open the [UI] (https://localhost:8080)
+- Click client to search routes
 - Click administrator to simulate and modify the system
 
- 
-
-
+### Deploy the application.
+- The application can be deployed as a artifact. With the embedded Tomcat, you don't need to deploy the application to 
+Tomcat, instead you can just run it as a application.
+- You can package the artifact with command : mvn clean install
+- Then you can find the artifact under target folder
+- You can run java -jar artifactname.jar to launch the application.
 
 
